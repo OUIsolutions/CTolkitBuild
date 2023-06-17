@@ -1,0 +1,5 @@
+
+
+class ValgrindError(Exception):
+    pass
+

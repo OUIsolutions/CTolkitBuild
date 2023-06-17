@@ -1,7 +1,7 @@
 from typing import List
 
-from CToolKit.Errors.CopilerError import CompilationError
-from CToolKit.Errors.ExecutionError import ExecutionError
+from CToolKit.Errors.CopilationError import CopilationError
+from CToolKit.Errors.CopilationWarning import CopilationWarning
 
 import subprocess
 from platform import system as current_os
@@ -13,10 +13,11 @@ def copile_project_by_command(command: str, raise_errors: bool = True, raise_war
     status_code, output = subprocess.getstatusoutput(command)
 
     if raise_errors and status_code != 0:
-        raise CompilationError(output, status_code,'Copilation Error')
+        raise CopilationError(output, status_code)
+
 
     if raise_warnings and 'warning:' in output:
-        raise CompilationError(output, status_code,'Warning')
+        raise CopilationWarning(output)
 
 
 def copile_project(compiler: str, file: str, output: str = None, flags: List[str] = None, raise_errors: bool = True,
@@ -46,8 +47,6 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
     if status_code != 0:
         raise ExecutionError(output,status_code)
 
-    
-
-
-    print('status' ,status_code)
+    if 'ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)' not in output:
+        pass
     print('comand',output)
