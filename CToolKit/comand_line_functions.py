@@ -3,21 +3,24 @@ from typing import List
 from CToolKit.Errors.CopilationError import CopilationError
 from CToolKit.Errors.CopilationWarning import CopilationWarning
 
-import subprocess
+from CToolKit.Errors.ValgrindError import  ValgrindError
+from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
+from CToolKit.ComandLineExecution import  ComandLineExecution
+
 from platform import system as current_os
 
 
 
 def copile_project_by_command(command: str, raise_errors: bool = True, raise_warnings: bool = True):
     """Compile an project based on the comands passed"""
-    status_code, output = subprocess.getstatusoutput(command)
+    result = ComandLineExecution(command)
 
-    if raise_errors and status_code != 0:
-        raise CopilationError(output, status_code)
+    if raise_errors and result.status_code != 0:
+        raise CopilationError(result.output, result.status_code)
 
 
     if raise_warnings and 'warning:' in output:
-        raise CopilationWarning(output)
+        raise CopilationWarning(result.output)
 
 
 def copile_project(compiler: str, file: str, output: str = None, flags: List[str] = None, raise_errors: bool = True,
@@ -37,6 +40,7 @@ def copile_project(compiler: str, file: str, output: str = None, flags: List[str
 
 
 
+
 def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
     if flags is None:
         flags = []
@@ -48,5 +52,7 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
         raise ExecutionError(output,status_code)
 
     if 'ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)' not in output:
-        pass
-    print('comand',output)
+        raise ValgrindError(output)
+
+    if 'All heap blocks were freed -- no leaks are possible' not in output:
+        raise ValgrindLeak(output)
