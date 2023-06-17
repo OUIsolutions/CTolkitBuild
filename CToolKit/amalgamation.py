@@ -29,8 +29,6 @@ def get_amalgamated_code(starter: str) -> str:
                 current_text += get_amalgamated_code(file_to_include)
 
     except FileNotFoundError:
-         raise FileNotFoundError(f'FileNotFoundError: {starter}')
+        raise FileNotFoundError(f'FileNotFoundError: {starter}')
 
     return current_text
-
-

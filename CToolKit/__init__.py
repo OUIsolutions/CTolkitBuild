@@ -1,2 +1,5 @@
 from CToolKit.amalgamation import  get_amalgamated_code
 from CToolKit.comand_line import compile_project_by_command
+from CToolKit.comand_line import compile_project
+from CToolKit.comand_line import test_binary_with_valgrind
+
