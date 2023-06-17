@@ -4,7 +4,7 @@ import subprocess
 
 class ComandLineExecution:
 
-    def __int__(self, command: str):
+    def __init__(self, command: str):
         self.status_code, self.output = subprocess.getstatusoutput(command)
 
         if self.status_code != 0:
