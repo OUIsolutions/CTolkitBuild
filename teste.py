@@ -1,39 +1,7 @@
+from CToolKit.readme_converter import  parse_readme_lexer
+from CToolKit.readme_converter import  get_code_reference
 
 
-def get_code_reference(line:str):
-    test = ''
-    TARGET  = '<!--codeof:'
-    inclusion = ''
-    found_start = False
-    for letter in line:
-
-
-        if found_start == False:
-
-            if letter == ' ':
-                continue
-
-            if not TARGET.startswith(test):
-                return None
-
-            test+=letter
-
-            if test == TARGET:
-                found_start = True
-                continue
-
-        if found_start:
-
-            if letter == ' ' or letter == '-':
-                return inclusion
-
-            inclusion+=letter
-
-    return None
-
-
-
-
-r  = get_code_reference('<!-- codeof:exemples/sql.c -->')
-
-print(r)
+with open('README.md','r') as arq:
+    r = parse_readme_lexer(arq.read())
+    print(r)
