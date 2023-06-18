@@ -136,9 +136,14 @@ print('statuscode:',execution.status_code)
 ~~~
 #### Readme Replacement 
 you can replace readme content with code system 
-for these just tipe: <!--codeof:test.c-->, you can see 
+for these just tipe: < + !--codeof:test.c-->, you can see 
 these example in the following lib:
 https://github.com/OUIsolutions/CTextEngine
+
+~~~Markdown
+Will free the memory
+<!--codeof:exemples/free.c-->
+~~~
 ~~~python
 
 import CToolKit as ct
