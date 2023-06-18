@@ -101,6 +101,9 @@ def include_code_in_markdown(markdown_file:str,save_file:bool=True)->str:
                     text+=ref_arq.read()
                     text+='\n~~~\n'
 
+    if '\n' in text:
+        text = text[0:-1]
+
     if save_file:
         with open(markdown_file,'w') as arq:
             arq.write(text)

@@ -58,9 +58,9 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
         raise ValgrindLeak(result.output)
 
 
-def execute_test_for_file(file: str):
+def execute_test_for_file(copiler:str, file: str):
     result = copile_project(
-        'gcc',
+        copiler,
         file,
         raise_errors=True,
         raise_warnings=False
@@ -73,13 +73,14 @@ def execute_test_for_file(file: str):
         raise e
 
 
-def execute_test_for_folder(folder: str,print_values:bool = True):
+def execute_test_for_folder(copiler:str, folder: str,print_values:bool = True):
     files = listdir(folder)
     for file in files:
-        if not file.endswith('.c'):
+        if not file.endswith('.c') or file.endswith('.cpp'):
             continue
+
         try:
-            execute_test_for_file(f'{folder}/{file}')
+            execute_test_for_file(copiler,f'{folder}/{file}')
             if print_values:
                 print('\033[92m'+f'passed: {file}' + '\33[37m')
 
