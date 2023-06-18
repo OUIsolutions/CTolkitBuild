@@ -16,10 +16,11 @@ def get_action(referencer_dir: str, line: str) -> str or None:
 
 
 
-def generate_amalgamated_code(starter: str) -> str:
+def generate_amalgamated_code(starter: str,output:str=None) -> str:
     """generate an full amalgamated code of the code you pass
     Args:
         starter (str): the started path of your code ex:'test.h'
+        output (str): the output you want to save, if its None it will not save nothing
     Raises:
         FileNotFoundError: if some file were not found
 
@@ -45,4 +46,7 @@ def generate_amalgamated_code(starter: str) -> str:
     except FileNotFoundError:
         raise FileNotFoundError(f'FileNotFoundError: {starter}')
 
+    if output:
+        with open(output,'w') as arq:
+            arq.write(current_text)
     return current_text
