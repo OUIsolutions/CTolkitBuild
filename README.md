@@ -1,7 +1,7 @@
 # CTolkitBuildAn Python Package to manipulate C buildings
 
 
-<!-- codeof:    setup.py   -->
+<!--codeof:setup.py-->
 ~~~py
 
 from setuptools import setup, find_packages
@@ -25,3 +25,10 @@ setup(
 
 
 pegou fora#aaa # aaaa# aaa
+
+
+
+
+
+
+

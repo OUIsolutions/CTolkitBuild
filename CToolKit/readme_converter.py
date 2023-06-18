@@ -1,9 +1,12 @@
+import json
+
 
 def get_code_reference(line:str)->str or None:
     test = ''
     TARGET  = '<!--codeof:'
     inclusion = ''
     found_start = False
+
     for letter in line:
 
 
@@ -23,8 +26,8 @@ def get_code_reference(line:str)->str or None:
 
         if found_start:
 
-            if letter == ' ' or letter == '-':
-                return inclusion
+            if letter == '-':
+                return inclusion.strip()
 
             inclusion+=letter
 
@@ -66,8 +69,7 @@ def parse_readme_lexer(text:str)->list:
             extension = None
             divided_ref = ref.split('.')
             if len(divided_ref) > 1:
-                extension = divided_ref[-1]
-
+                extension = divided_ref[-1].strip()
             constructed.append({'type':'ref','ref':ref,'extension':extension})
             block =''
             inside_block = True
@@ -84,13 +86,14 @@ def include_code_in_markdown(markdown_file:str,save_file:bool=True)->str:
     text = ''
     with open(markdown_file,'r') as arq:
         lexer = parse_readme_lexer(arq.read())
+
         for l in lexer:
             if l['type'] == 'block':
                 text+=l['text']
 
             if l['type'] == 'ref':
 
-                text+=f'\n<!-- codeof:{l["ref"]}-->\n'
+                text+=f'<!--codeof:{l["ref"]}-->\n'
 
                 with open(l['ref'] ,'r') as ref_arq:
 
