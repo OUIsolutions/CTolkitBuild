@@ -3,6 +3,12 @@
  providing easy automation tools to increase your code pipelines 
  with amalgamations, black box testing, and readme replacment
 
+### Instalation from Pip
+for install the lib from pip call 
+
+~~~shell
+pip install CToolKit
+~~~
 ### Installation from scratch
 
 clone the repo into your machine with:
