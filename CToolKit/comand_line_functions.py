@@ -68,7 +68,15 @@ def copile_project(compiler: str, file: str, output: str = None, flags: List[str
 
 
 def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
+    """ will test an binary execution with valgrind
+    Args:
+        binary_file (str): the binary execution ex: test.out
+        flags (List[str], optional): addition flags to the copilation
 
+    Raises:
+        ValgrindError: And valgrind Error ex: an buffer overflow
+        ValgrindLeak: _An valgrind leak, ex: an non free alocation
+    """
     if flags is None:
         flags = []
 
@@ -83,6 +91,14 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
 
 
 def execute_test_for_file(copiler:str, file: str):
+    """Execute an presset test for the current file
+    Args:
+        copiler (str): the copiler to use, ex: gcc or clang
+        file (str): the file to copile , ex: test.c
+
+    Raises:
+        e: all possible errors
+    """
     result = copile_project(
         copiler,
         file,
@@ -98,6 +114,14 @@ def execute_test_for_file(copiler:str, file: str):
 
 
 def execute_test_for_folder(copiler:str, folder: str,print_values:bool = True):
+    """execute tests for all .c or cpp files in the given folder
+    Args:
+        copiler (str): the copiler, ex: gcc , or clang
+        folder (str): the folder to copile
+        print_values (bool, optional): if is to print errors and sucess
+    Raises:
+        e: if happen some error
+    """
     files = listdir(folder)
     for file in files:
         if not file.endswith('.c') or file.endswith('.cpp'):
