@@ -42,14 +42,16 @@ def copile_project(compiler: str, file: str, output: str = None, flags: List[str
 
 
 def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
+
     if flags is None:
         flags = []
+
     command = f'valgrind  {binary_file} ' + ' '.join(flags)
     result = ComandLineExecution(command)
-
 
     if 'ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)' not in result.output:
         raise ValgrindError(result.output)
 
     if 'All heap blocks were freed -- no leaks are possible' not in result.output:
         raise ValgrindLeak(result.output)
+

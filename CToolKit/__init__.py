@@ -1,4 +1,4 @@
-from CToolKit.amalgamation import  get_amalgamated_code
+from CToolKit.amalgamation import  generate_amalgamated_code
 from CToolKit.ComandLineExecution import ComandLineExecution
 from CToolKit.comand_line_functions import copile_project_by_command
 from CToolKit.comand_line_functions import copile_project

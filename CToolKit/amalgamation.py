@@ -1,8 +1,10 @@
-from sys import exit
 from os.path import join
 
 
-def get_inclusion_dir(referencer_dir: str, line: str) -> str or None:
+
+
+
+def get_action(referencer_dir: str, line: str) -> str or None:
     line = line.strip()
     if not line.startswith('#include'):
         return None
@@ -12,7 +14,11 @@ def get_inclusion_dir(referencer_dir: str, line: str) -> str or None:
         return join(referencer_dir, relative_file)
 
 
-def get_amalgamated_code(starter: str) -> str:
+
+
+def generate_amalgamated_code(starter: str) -> str:
+
+
     current_text = ''
     try:
         with open(starter) as f:
@@ -21,12 +27,13 @@ def get_amalgamated_code(starter: str) -> str:
             lines = f.readlines()
             for line in lines:
                 ##trim line
-                file_to_include = get_inclusion_dir(current_dir, line)
-                if not file_to_include:
+                file_to_include = get_action(current_dir, line)
+                if file_to_include == None:
                     current_text += line
                     continue
 
-                current_text += get_amalgamated_code(file_to_include)
+                else:
+                    current_text += generate_amalgamated_code(file_to_include)
 
     except FileNotFoundError:
         raise FileNotFoundError(f'FileNotFoundError: {starter}')
