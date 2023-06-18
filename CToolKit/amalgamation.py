@@ -18,7 +18,6 @@ def get_action(referencer_dir: str, line: str) -> str or None:
 
 def generate_amalgamated_code(starter: str) -> str:
 
-
     current_text = ''
     try:
         with open(starter) as f:

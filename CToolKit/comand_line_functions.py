@@ -24,7 +24,7 @@ def copile_project_by_command(command: str, raise_errors: bool = True, raise_war
 
 
 def copile_project(compiler: str, file: str, output: str = None, flags: List[str] = None, raise_errors: bool = True,
-                    raise_warnings: bool = True):
+                    raise_warnings: bool = True)->str:
 
     if flags is None:
         flags = []
@@ -37,7 +37,7 @@ def copile_project(compiler: str, file: str, output: str = None, flags: List[str
 
     command = f'{compiler} {file} -o {output} ' + ' '.join(flags)
     copile_project_by_command(command, raise_errors, raise_warnings)
-
+    return output
 
 
 
