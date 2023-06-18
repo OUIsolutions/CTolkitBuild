@@ -83,6 +83,13 @@ def parse_readme_lexer(text:str)->list:
 
 
 def include_code_in_markdown(markdown_file:str,save_file:bool=True)->str:
+    """include all <!--codeof:teste.c--> in the given markdown file
+    Args:
+        markdown_file (str):the markdown file, ex: README.md
+        save_file (bool, optional): if is to save the file
+    Returns:
+        str: the generated markdown
+    """
     text = ''
     with open(markdown_file,'r') as arq:
         lexer = parse_readme_lexer(arq.read())
