@@ -86,6 +86,28 @@ ct.copile_project(
 FLAGS = ['-libcur']
 ct.test_binary_with_valgrind(OUTPUT,FLAGS)
 ~~~
+Executing copilation and test with file with a single comand 
+~~~python
+import CToolKit as ct
+
+COPILER = 'gcc'
+FILE = 'test.c'
+
+ct.execute_test_for_file(COPILER,FILE)
+
+~~~
+
+Executing Test with all .c or .cpp files in the given folder 
+
+~~~python 
+
+import CToolKit as ct
+
+COPILER = 'gcc'
+FOLDER ='test'
+ct.execute_test_for_folder(COPILER,FOLDER,print_values=True)
+
+~~~
 
 
 
