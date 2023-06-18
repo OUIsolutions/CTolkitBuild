@@ -65,6 +65,30 @@ ct.copile_project(
     )
 ~~~
 
+#### Testing copilation with valgrind 
+
+Execute an valgrind testing of the given binary ( you need to have valgrind installed in your os)
+
+~~~python
+import CToolKit as ct
+COPILER = 'gcc'
+FILE = 'test.c'
+OUTPUT = 'test.out'
+ct.copile_project(
+    COPILER,
+    FILE,
+    OUTPUT,
+    raise_errors=True,
+    raise_warnings=True
+    )
+
+
+FLAGS = ['-libcur']
+ct.test_binary_with_valgrind(OUTPUT,FLAGS)
+~~~
+
+
+
 
 
 
