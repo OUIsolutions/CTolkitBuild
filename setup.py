@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='CToolKit',
     version='1.0',
-    description='CToolKit to manipulate CPipeLines',
+    description='CToolKit to manipulate CPipeLines and Repos',
     author='Mateus Moutinho',
     author_email='mateusmoutinho01@gmail.com',
     url='https://oui.tec.br/',

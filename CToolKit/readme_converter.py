@@ -41,6 +41,10 @@ def parse_readme_lexer(text:str)->list:
     for line in lines:
         if inside_block:
             if first_line_inside_block:
+
+                if line.strip() == '':
+                    continue
+
                 if line.startswith('~~~') or line .startswith('´´´'):
                     first_line_inside_block = False
                     continue
@@ -70,7 +74,32 @@ def parse_readme_lexer(text:str)->list:
             first_line_inside_block = True
 
         if ref is None:
-            block+=line
+            block+=line+'\n'
 
     constructed.append({'type': 'block', 'text': block})
     return constructed
+
+
+def include_code_in_markdown(markdown_file:str,save_file:bool=True)->str:
+    text = ''
+    with open(markdown_file,'r') as arq:
+        lexer = parse_readme_lexer(arq.read())
+        for l in lexer:
+            if l['type'] == 'block':
+                text+=l['text']
+
+            if l['type'] == 'ref':
+
+                text+=f'\n<!-- codeof:{l["ref"]}-->\n'
+
+                with open(l['ref'] ,'r') as ref_arq:
+
+                    text+=f'~~~{l["extension"]}\n'
+                    text+=ref_arq.read()
+                    text+='\n~~~\n'
+
+    if save_file:
+        with open(markdown_file,'w') as arq:
+            arq.write(text)
+
+    return text
