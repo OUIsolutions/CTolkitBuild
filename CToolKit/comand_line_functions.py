@@ -9,7 +9,7 @@ from CToolKit.ComandLineExecution import ComandLineExecution
 
 from platform import system as current_os
 
-
+from os import listdir,remove
 
 def copile_project_by_command(command: str, raise_errors: bool = True, raise_warnings: bool = True):
     """Compile an project based on the comands passed"""
@@ -41,6 +41,8 @@ def copile_project(compiler: str, file: str, output: str = None, flags: List[str
 
 
 
+
+
 def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
 
     if flags is None:
@@ -55,3 +57,34 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
     if 'All heap blocks were freed -- no leaks are possible' not in result.output:
         raise ValgrindLeak(result.output)
 
+
+def execute_test_for_file(file: str):
+    result = copile_project(
+        'gcc',
+        file,
+        raise_errors=True,
+        raise_warnings=False
+    )
+    try:
+        test_binary_with_valgrind(result)
+        remove(result)
+    except Exception as e:
+        remove(result)
+        raise e
+
+
+def execute_test_for_folder(folder: str,print_values:bool = True):
+    files = listdir(folder)
+    for file in files:
+        if not file.endswith('.c'):
+            continue
+        try:
+            execute_test_for_file(f'{folder}/{file}')
+            if print_values:
+                print('\033[92m'+f'passed: {file}' + '\33[37m')
+
+        except Exception as e:
+            if print_values:
+                print('\033[91m' + f'fail with file: {file}' + '\33[37m')
+                print('\033[0m')
+            raise e
