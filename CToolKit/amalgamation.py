@@ -17,7 +17,15 @@ def get_action(referencer_dir: str, line: str) -> str or None:
 
 
 def generate_amalgamated_code(starter: str) -> str:
+    """generate an full amalgamated code of the code you pass
+    Args:
+        starter (str): the started path of your code ex:'test.h'
+    Raises:
+        FileNotFoundError: if some file were not found
 
+    Returns:
+        str: The full amalgamated code
+    """
     current_text = ''
     try:
         with open(starter) as f:

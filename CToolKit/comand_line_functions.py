@@ -12,7 +12,17 @@ from platform import system as current_os
 from os import listdir,remove
 
 def copile_project_by_command(command: str, raise_errors: bool = True, raise_warnings: bool = True):
-    """Compile an project based on the comands passed"""
+    """execute an copilation with the given comand
+    Args:
+        command (str): the comand copilation ,ex: 'gcc test.c'
+        raise_errors (bool, optional): if its to raise An copilation Error
+        raise_warnings (bool, optional): if is to raise an warning Error
+
+    Raises:
+        CopilationError: The Copilation Error Exception
+        CopilationWarning: The CopilationWarning Exception
+    """
+    
     result = ComandLineExecution(command)
 
     if raise_errors and result.status_code != 0:
@@ -25,7 +35,21 @@ def copile_project_by_command(command: str, raise_errors: bool = True, raise_war
 
 def copile_project(compiler: str, file: str, output: str = None, flags: List[str] = None, raise_errors: bool = True,
                     raise_warnings: bool = True)->str:
+    """Copiles an project file
 
+    Args:
+        compiler (str): the current copiler , ex: gcc,clang
+        file (str): the file to copile, ex: test.c
+        output (str, optional): the file output, ex: test.out ,if were None , it will be
+        the file replaced with .out or .exe
+        flags (List[str], optional): the optional flags copilatin
+        raise_errors (bool, optional): if its to raise An copilation Error
+        raise_warnings (bool, optional): if is to raise an warning Error
+
+    Raises:
+        CopilationError: The Copilation Error Exception
+        CopilationWarning: The CopilationWarning Exception
+    """
     if flags is None:
         flags = []
 
