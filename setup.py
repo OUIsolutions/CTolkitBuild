@@ -9,7 +9,7 @@ setup(
     author_email='mateusmoutinho01@gmail.com',
     url='https://oui.tec.br/',
     packages=find_packages(),
-
+    install_requires=[],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
