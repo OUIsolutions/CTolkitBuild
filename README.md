@@ -12,6 +12,7 @@ git clone https://github.com/OUIsolutions/CTolkitBuild.git
 ~~~
 Then install with:
 ~~~shell
+cd CTolkitBuild/
 pip install .
 ~~~
 
@@ -109,7 +110,41 @@ ct.execute_test_for_folder(COPILER,FOLDER,print_values=True)
 
 ~~~
 
+#### Execution 
+you can execute an binary with the ComandLine Execution class
 
+~~~python
+
+import CToolKit as ct
+COPILER = 'gcc'
+
+FILE = 'test.c'
+OUTPUT = 'test.out'
+ct.copile_project(
+    COPILER,
+    FILE,
+    OUTPUT,
+    raise_errors=True,
+    raise_warnings=True
+    )
+
+
+execution = ct.ComandLineExecution(f'./{OUTPUT}')
+
+print('output:',execution.output)
+print('statuscode:',execution.status_code)
+~~~
+#### Readme Replacement 
+you can replace readme content with code system 
+for these just tipe: <!--codeof:test.c-->, you can see 
+these example in the following lib:
+https://github.com/OUIsolutions/CTextEngine
+~~~python
+
+import CToolKit as ct
+
+ct.include_code_in_markdown('README.md')
+~~~
 
 
 
