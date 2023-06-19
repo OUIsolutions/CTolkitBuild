@@ -11,7 +11,8 @@ from platform import system as current_os
 
 from os import listdir,remove
 
-def copile_project_by_command(command: str, raise_errors: bool = True, raise_warnings: bool = True):
+
+def compile_project_by_command(command: str, raise_errors: bool = True, raise_warnings: bool = True):
     """execute an copilation with the given comand
     Args:
         command (str): the comand copilation ,ex: 'gcc test.c'
@@ -33,12 +34,12 @@ def copile_project_by_command(command: str, raise_errors: bool = True, raise_war
         raise CopilationWarning(result.output)
 
 
-def copile_project(compiler: str, file: str, output: str = None, flags: List[str] = None, raise_errors: bool = True,
+def compile_project(compiler: str, file: str, output: str = None, flags: List[str] = None, raise_errors: bool = True,
                     raise_warnings: bool = True)->str:
     """Copiles an project file
 
     Args:
-        compiler (str): the current copiler , ex: gcc,clang
+        compiler (str): the current compiler , ex: gcc,clang
         file (str): the file to copile, ex: test.c
         output (str, optional): the file output, ex: test.out ,if were None , it will be
         the file replaced with .out or .exe
@@ -60,7 +61,7 @@ def copile_project(compiler: str, file: str, output: str = None, flags: List[str
             output = file.replace('.c', '.out').replace('.cpp', '.out')
 
     command = f'{compiler} {file} -o {output} ' + ' '.join(flags)
-    copile_project_by_command(command, raise_errors, raise_warnings)
+    compile_project_by_command(command, raise_errors, raise_warnings)
     return output
 
 
@@ -90,17 +91,17 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
         raise ValgrindLeak(result.output)
 
 
-def execute_test_for_file(copiler:str, file: str):
+def execute_test_for_file(compiler:str, file: str):
     """Execute an presset test for the current file
     Args:
-        copiler (str): the copiler to use, ex: gcc or clang
+        compiler (str): the compiler to use, ex: gcc or clang
         file (str): the file to copile , ex: test.c
 
     Raises:
         e: all possible errors
     """
-    result = copile_project(
-        copiler,
+    result = compile_project(
+        compiler,
         file,
         raise_errors=True,
         raise_warnings=False
@@ -113,10 +114,10 @@ def execute_test_for_file(copiler:str, file: str):
         raise e
 
 
-def execute_test_for_folder(copiler:str, folder: str,print_values:bool = True):
+def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True):
     """execute tests for all .c or cpp files in the given folder
     Args:
-        copiler (str): the copiler, ex: gcc , or clang
+        compiler (str): the compiler, ex: gcc , or clang
         folder (str): the folder to copile
         print_values (bool, optional): if is to print errors and sucess
     Raises:
@@ -128,7 +129,7 @@ def execute_test_for_folder(copiler:str, folder: str,print_values:bool = True):
             continue
 
         try:
-            execute_test_for_file(copiler,f'{folder}/{file}')
+            execute_test_for_file(compiler, f'{folder}/{file}')
             if print_values:
                 print('\033[92m'+f'passed: {file}' + '\33[37m')
 
