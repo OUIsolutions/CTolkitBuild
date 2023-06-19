@@ -49,4 +49,4 @@ def generate_amalgamated_code(starter: str,output:str=None) -> str:
     if output:
         with open(output,'w') as arq:
             arq.write(current_text)
-    return current_text
+    return '\n' + current_text +'\n'
