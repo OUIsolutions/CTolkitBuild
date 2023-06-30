@@ -34,10 +34,10 @@ class Struct:
 
 
     def _implement_self_ref(self)->str:
-        return f'{self.type_name} * {self.self_name}'
+        return f'{self.type_name}* {self.self_name}'
 
     def implement_self_type(self)->str:
-        return f'{self.type_name} *'
+        return f'{self.type_name}*'
 
 
     def generate_declaration(self, output: str = None) -> str:
@@ -50,7 +50,7 @@ class Struct:
         text += '\n}' + f'{self.type_name};\n\n'
 
         # constructr method
-        text += f'{self.type_name} * {self.initializer_name}();\n\n'
+        text += f'{self.implement_self_type()} {self.initializer_name}();\n\n'
 
         for i in self.elements:
             text+= i.implement_getter_and_setter_declaration(self.starter_method_name,self._implement_self_ref())

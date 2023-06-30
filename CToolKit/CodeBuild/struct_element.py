@@ -23,7 +23,7 @@ class StructElement:
             by_ownership_flag:str='_by_ownership',
 
             private:bool=False,
-            private_flag:str='__',
+            private_flag:str='_',
 
 
             allow_getter: bool=None,
@@ -34,18 +34,28 @@ class StructElement:
             ownership_flag:str =None
     ):
 
-        self.name = name
-        if private:
-            self.name = private_flag + name
+
 
         self.private = private
         self.element_type = convert_type(element_type)
         self.ownership_getter = ownership_getter
         self.ownership_setter = ownership_setter
-
-
         self.allow_getter = allow_getter
+        self.set_flag = set_flag
+        self.get_flag = get_flag
 
+        self.by_value_flag = by_value_flag
+        self.by_reference_flag = by_reference_flag
+        self.by_ownership_flag = by_ownership_flag
+
+        self.required_at_start = required_at_start
+        self.defaults_to = defaults_to
+        self.private_flag = private_flag
+
+        self.name = name
+        if private:
+            self.name = private_flag + name
+        self.ownership_flag =construct_by_default(f'{private_flag}{self.name}_owner',ownership_flag)
         if allow_getter is None:
             if private:
                 self.allow_getter = False
@@ -57,34 +67,22 @@ class StructElement:
                 self.allow_getter = False
 
 
+        self.allow_setter = allow_setter
         if allow_setter is None:
 
             if self.element_type.pointer:
                 self.allow_setter = True
+
             else:
                 self.allow_setter = False
 
 
-        self.allow_setter = allow_setter
 
-        self.set_flag = set_flag
-        self.get_flag = get_flag
+    def _implement_get_args(self,object_self_ref:str)->str:
+        return f'({object_self_ref})'
 
-        self.by_value_flag = by_value_flag
-        self.by_reference_flag = by_reference_flag
-        self.by_ownership_flag = by_ownership_flag
-
-        self.required_at_start = required_at_start
-        self.defaults_to = defaults_to
-        self.private_flag = private_flag
-        self.ownership_flag =construct_by_default(f'{private_flag}{self.name}_owner',ownership_flag)
-
-
-
-
-
-
-
+    def _implement_set_args(self,object_self_ref:str)->str:
+        return f'({object_self_ref},{self.element_type.type_name} {self.name})'
 
 
     def implement_getter_and_setter_declaration(self,method_starter:str,object_self_ref:str)->str:
@@ -92,7 +90,8 @@ class StructElement:
 
         #getters
         if self.allow_getter:
-            get_args = f'({object_self_ref});'
+            get_args = f'{self._implement_get_args(object_self_ref)};'
+
             if self.ownership_getter.by_value:
                 get_text+= f'{self.element_type.type_name} {method_starter}'
                 get_text+= f'{self.get_flag}{self.name}{self.by_value_flag}{get_args}\n'
@@ -110,17 +109,17 @@ class StructElement:
 
         set_text = ''
         if self.allow_setter:
-            set_args = f'({object_self_ref},{self.element_type.type_name} {self.name});'
+            set_args = f'{self._implement_set_args(object_self_ref)};'
             #setter
             if self.ownership_setter.by_value:
-                set_text+= f'void {method_starter}{self.set_flag}{self.by_value_flag}{set_args}'
-
+                set_text+= f'void {method_starter}{self.set_flag}{self.name}{self.by_value_flag}{set_args}\n'
 
             if self.ownership_setter.by_reference:
-                set_text+= f'void {method_starter}{self.set_flag}{self.by_reference_flag}{set_args}'
+                set_text+= f'void {method_starter}{self.set_flag}{self.name}{self.by_reference_flag}{set_args}\n'
 
             if self.ownership_setter.by_ownership:
-                set_text+= f'void {method_starter}{self.set_flag}{self.by_ownership_flag}{set_args}'
+                set_text+= f'void {method_starter}{self.set_flag}{self.name}{self.by_ownership_flag}{set_args}\n'
+
 
         text = ''
         if get_text:
