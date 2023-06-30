@@ -1,10 +1,10 @@
 
 from .ownership import  OwnerShip
-by_value = OwnerShip(by_value=True)
-by_value_and_reference = OwnerShip(by_value=True,by_reference=True)
-by_value_and_ownership = OwnerShip(by_value=True,by_ownership=True)
-by_all = OwnerShip(by_value=True,by_reference=True,by_ownership=True)
-by_reference = OwnerShip(by_reference=True)
-by_reference_and_ownership =OwnerShip(by_reference=True,by_ownership=True)
-by_ownership = OwnerShip(by_ownership=True)
+BY_VALUE = OwnerShip(by_value=True)
+BY_VALUE_AND_REFERENCE = OwnerShip(by_value=True, by_reference=True)
+BY_VALUE_AND_OWNERSHIP = OwnerShip(by_value=True, by_ownership=True)
+BY_ALL = OwnerShip(by_value=True, by_reference=True, by_ownership=True)
+BY_REFERENCE = OwnerShip(by_reference=True)
+BY_REFERENCE_AND_OWNERSHIP =OwnerShip(by_reference=True, by_ownership=True)
+BY_OWNERSHIP = OwnerShip(by_ownership=True)
 

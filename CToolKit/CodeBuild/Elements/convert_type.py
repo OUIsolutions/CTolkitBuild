@@ -8,15 +8,15 @@ from .element_pointer import ElementPointer
 def convert_type(type_name:type or Element or ElementPointer)->Element:
 
     if type_name == str:
-        return string_type
+        return STRING
 
     if type_name == int:
-        return int_type
+        return INT
 
     if type_name == bool:
-        return bool_type
+        return BOOL
 
     if type_name == float:
-        return float_type
+        return FLOAT
 
     return type_name

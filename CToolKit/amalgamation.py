@@ -30,7 +30,7 @@ def generate_amalgamated_code(starter: str,output:str=None) -> str:
     current_text = ''
     try:
         with open(starter) as f:
-            # get current dir name
+            # get current dir type_name
             current_dir = '/'.join(starter.split('/')[:-1])
             lines = f.readlines()
             for line in lines:

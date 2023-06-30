@@ -1,7 +1,7 @@
 
 import CToolKit as ct
 car = ct.Struct(
-    name='Car',
+    type_name='Car',
 
 )
 
