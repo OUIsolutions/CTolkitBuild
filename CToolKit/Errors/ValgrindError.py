@@ -1,5 +1,4 @@
-from CToolKit.Errors.ComandLineWarning import ComandLineWarning
-
+from .ComandLineWarning import ComandLineWarning
 
 class ValgrindError(ComandLineWarning):
     pass

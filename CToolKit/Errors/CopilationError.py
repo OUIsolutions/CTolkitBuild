@@ -1,4 +1,4 @@
 
-from CToolKit.Errors.ComandLineError import  ComandLineError
+from .ComandLineError import  ComandLineError
 class CopilationError(ComandLineError):
     pass
