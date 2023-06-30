@@ -1,12 +1,14 @@
 from .file_saving import save_file
-
+from .struct_element import StructElement
+from typing import List
 class Struct:
 
     def __init__(self,
                 name:str,
-                initializer_name=None,
-                destructor_name=None,
-                allow_function_pointers:bool=True,
+                elements:List[StructElement],
+                initializer_name:str=None,
+                destructor_name:str=None,
+                allow_function_pointers:bool=False,
                 implement_copy_method:bool=False,
                 copy_method_name:str=None,
                 self_name:str='self'
@@ -16,6 +18,8 @@ class Struct:
         self.allow_function_pointers = allow_function_pointers
         self.self_name = self_name
         self.initializer_name = initializer_name
+        self.elements = elements
+
         if initializer_name is None:
             self.initializer_name = f'{name}_new'
 
