@@ -8,10 +8,9 @@ from CToolKit.comand_line_functions import execute_test_for_file
 from CToolKit.comand_line_functions import execute_test_for_folder
 
 
-from CToolKit.Errors.CopilationError import CopilationError
-from CToolKit.Errors.CopilationWarning import CopilationWarning
-from CToolKit.Errors.ExecutionError import  ExecutionError
-from CToolKit.Errors.ValgrindError import  ValgrindError
-from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
+from CToolKit.Errors import *
+
 
 from CToolKit.readme_converter import include_code_in_markdown
+
+from CToolKit.CodeBuild.Struct import Struct
