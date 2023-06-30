@@ -16,14 +16,19 @@ class StructElement:
             ownership_setter: OwnerShip= BY_VALUE,
             ownership_getter: OwnerShip= BY_VALUE_AND_REFERENCE,
             private:bool=False,
-            private_flag:str='_',
+            private_flag:str='__',
+
             allow_getter: bool=None,
             allow_setter:bool=None,
+
             required_at_start:bool=False,
             defaults_to:Any=None,
             ownership_flag:str =None
     ):
+
         self.name = name
+        if private:
+            self.name = private_flag + name
 
         self.private = private
         self.element_type = convert_type(element_type)
@@ -34,12 +39,18 @@ class StructElement:
         self.allow_getter = allow_getter
 
         if allow_getter is None:
-            if element_type.pointer:
+            if private:
+                self.allow_getter = False
+
+            elif element_type.pointer:
                 self.allow_getter = True
+
             else:
                 self.allow_getter = False
 
+
         if allow_setter is None:
+
             if element_type.pointer:
                 self.allow_setter = True
             else:
@@ -52,7 +63,8 @@ class StructElement:
         self.required_at_start = required_at_start
         self.defaults_to = defaults_to
         self.private_flag = private_flag
-        self.ownership_flag =construct_by_default(f'{private_flag}{self.name}_owner')
+        self.ownership_flag =construct_by_default(f'{private_flag}{self.name}_owner',ownership_flag)
+
 
 
 

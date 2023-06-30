@@ -9,7 +9,7 @@ class Struct:
                  type_name: str,
                  elements: List[StructElement],
                  initializer_name: str = None,
-                 starter_methods_name:str=None,
+                 starter_method_name:str=None,
                  destructor_name: str = None,
                  allow_function_pointers: bool = False,
                  implement_copy_method: bool = True,
@@ -26,7 +26,10 @@ class Struct:
         self.destructor_name = construct_by_default(f'{type_name}_free',destructor_name)
         self.initializer_name = construct_by_default(f'{type_name}_new',initializer_name)
         self.copy_method_name = construct_by_default( f'{type_name}_copy',copy_method_name)
+        self.starter_method_name = construct_by_default(f'{type_name}_',starter_method_name)
         self.implement_copy_method = implement_copy_method
+        self.implement_represent_method = implement_represent_method
+        self.represent_method_name = construct_by_default(f'{type_name}_represent',represent_method_name)
 
 
 
@@ -36,16 +39,6 @@ class Struct:
     def implement_self_type(self)->str:
         return f'{self.type_name} *'
 
-    def implement_getter_and_setter(self,element:StructElement,mode:str)->str:
-        text = ''
-        if not element.private:
-            text += f'{element.element_type} {self.type_name}_get_{element.name}_by_{mode}'
-            text += f'({self.type_name} * {self.self_name});\n'
-
-        if not i.imutable:
-            text += f'{element.element_type} {self.type_name}_set_{element.name}_by_{mode}'
-            text += f'({self.type_name} * {self.self_name}, {element.element_type} {element.name})\n'
-        return text
 
     def generate_declaration(self, output: str = None) -> str:
 
@@ -60,19 +53,9 @@ class Struct:
         text += f'{self.type_name} * {self.initializer_name}();\n\n'
 
         for i in self.elements:
-
-             if i.ownership.by_value:
-                text+=self.implement_getter_and_setter(self,i,'value')
-                text+='\n'
-
-            if i.ownership.by_reference:
-                text += self.implement_getter_and_setter(self, i, 'reference')
-                text+='\n'
+            pass
 
 
-            if i.ownership.by_ownership:
-                text += self.implement_getter_and_setter(self, i, 'ownership')
-                text += '\n'
 
 
         if self.implement_copy_method:
