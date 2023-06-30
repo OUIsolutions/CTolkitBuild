@@ -2,7 +2,7 @@ from .file_saving import save_file
 
 class Struct:
 
-    def __int__(self,
+    def __init__(self,
                 name:str,
                 initializer_name=None,
                 destructor_name=None,
@@ -29,10 +29,13 @@ class Struct:
         text+='}'+f'{self.name};\n'
 
         #constructr method
-        text+=f'{self.name} * {self.initializer_name}();'
+        text+=f'{self.name} * {self.initializer_name}();\n'
 
         #desctructor method
-        text+=f'void {self.destructor_name}({self.name} * self);'
+        text+=f'void {self.destructor_name}({self.name} * self);\n'
+
+        if output:
+            save_file(text,output)
 
         return text
 

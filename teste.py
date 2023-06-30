@@ -1,15 +1,8 @@
 
-
-car = Struct(
-    
+import CToolKit as ct
+car = ct.Struct(
     name='Car',
-    initializer='newCar',
-    deleter='freeCar'
-    values=[
-        StructValue('type',int,required=True),
-        StructPointer('aaaaa',required=True)
-    ]
-    
+
 )
 
 cars = ArrayOf(
