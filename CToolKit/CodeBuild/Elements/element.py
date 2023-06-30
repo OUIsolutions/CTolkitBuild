@@ -3,6 +3,7 @@ class Element:
 
     def __init__(self,type_name:str):
         self.type_name = type_name
+        self.pointer = False
 
     def implement_declaration(self,element_name:str)->str:
         return f'{self.type_name} {element_name};'

@@ -17,25 +17,26 @@ class StructElement:
             ownership_getter: OwnerShip= BY_VALUE_AND_OWNERSHIP,
             private:bool=False,
             private_flag:str='_',
-            allow_getter: bool=True,
-            getter_name:str=None,
-            allow_setter:bool=True,
-            setter_name:str=None,
+            allow_getter: bool=None,
+            allow_setter:bool=None,
             required_at_start:bool=False,
             defaults_to:Any=None,
             ownership_flag:str =None
     ):
         self.name = name
+
+        self.private = private
         self.element_type = convert_type(element_type)
         self.ownership_getter = ownership_getter
-
-        
         self.ownership_setter = ownership_setter
+
+
         self.allow_getter = allow_getter
-        self.getter_name = getter_name
+        if allow_getter is None:
+            pass
 
         self.allow_setter = allow_setter
-        self.setter_name = setter_name
+
 
         self.required_at_start = required_at_start
         self.defaults_to = defaults_to
