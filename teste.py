@@ -1,13 +1,25 @@
 
 
 car = Struct(
+    
     name='Car',
+    initializer='newCar',
+    deleter='freeCar'
     values=[
-        StructInt('type'),
-        StructPointer('aaaaa',by_value=True,by_reference=True,by_ownership=True)
+        StructValue('type',int,required=True),
+        StructPointer('aaaaa',required=True)
     ]
     
 )
+
+cars = ArrayOf(
+    data_type= car
+    by_value=True,
+    by_reference=True,
+    by_ownership=True
+)
+
+
 
 
 
