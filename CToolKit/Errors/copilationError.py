@@ -1,4 +1,4 @@
 
-from .ComandLineError import  ComandLineError
+from .comandLineError import  ComandLineError
 class CopilationError(ComandLineError):
     pass

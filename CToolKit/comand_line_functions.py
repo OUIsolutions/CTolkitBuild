@@ -1,11 +1,11 @@
 from typing import List
 
-from CToolKit.Errors.CopilationError import CopilationError
-from CToolKit.Errors.CopilationWarning import CopilationWarning
+from CToolKit.Errors.copilationError import CopilationError
+from CToolKit.Errors.copilationWarning import CopilationWarning
 
-from CToolKit.Errors.ValgrindError import  ValgrindError
-from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
-from CToolKit.ComandLineExecution import ComandLineExecution
+from CToolKit.Errors.valgrindError import  ValgrindError
+from CToolKit.Errors.valgrindLeak import  ValgrindLeak
+from CToolKit.comandLineExecution import ComandLineExecution
 
 from platform import system as current_os
 

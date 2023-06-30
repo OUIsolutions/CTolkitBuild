@@ -1,7 +1,7 @@
 
 
-from .CopilationError import CopilationError
-from .CopilationWarning import CopilationWarning
-from .ExecutionError import  ExecutionError
-from .ValgrindError import  ValgrindError
-from .ValgrindLeak import  ValgrindLeak
+from .copilationError import CopilationError
+from .copilationWarning import CopilationWarning
+from .executionError import  ExecutionError
+from .valgrindError import  ValgrindError
+from .valgrindLeak import  ValgrindLeak

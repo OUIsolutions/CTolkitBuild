@@ -1,5 +1,5 @@
 
-from .ComandLineWarning import ComandLineWarning
+from .comandLineWarning import ComandLineWarning
 
 class CopilationWarning(ComandLineWarning):
     pass
