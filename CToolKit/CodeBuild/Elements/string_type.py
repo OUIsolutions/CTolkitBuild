@@ -1,4 +1,4 @@
-from element_pointer import ElementPointer
+from .element_pointer import ElementPointer
 
 
 class StringType(ElementPointer):
