@@ -16,11 +16,11 @@ class StructElement:
             ownership_setter: OwnerShip= BY_VALUE,
             ownership_getter: OwnerShip= BY_VALUE_AND_REFERENCE,
 
-            set_flag:str='_set',
-            get_flag:str='_get',
+            set_flag:str='_set_',
+            get_flag:str='_get_',
             by_value_flag:str='_by_value',
-            by_reference_flag:str='by_reference',
-            by_ownership_flag:str='by_ownership',
+            by_reference_flag:str='_by_reference',
+            by_ownership_flag:str='_by_ownership',
 
             private:bool=False,
             private_flag:str='__',
@@ -50,7 +50,7 @@ class StructElement:
             if private:
                 self.allow_getter = False
 
-            elif element_type.pointer:
+            elif self.element_type.pointer:
                 self.allow_getter = True
 
             else:
@@ -59,7 +59,7 @@ class StructElement:
 
         if allow_setter is None:
 
-            if element_type.pointer:
+            if self.element_type.pointer:
                 self.allow_setter = True
             else:
                 self.allow_setter = False
@@ -90,35 +90,37 @@ class StructElement:
     def implement_getter_and_setter_declaration(self,method_starter:str,object_self_ref:str)->str:
         get_text = ''
 
-        get_args =f'({object_self_ref});'
         #getters
-        if self.ownership_getter.by_value:
-            get_text+= f'{self.element_type.type_name} {method_starter}'
-            get_text+= f'{self.get_flag}{self.by_value_flag}{get_args}\n'
+        if self.allow_getter:
+            get_args = f'({object_self_ref});'
+            if self.ownership_getter.by_value:
+                get_text+= f'{self.element_type.type_name} {method_starter}'
+                get_text+= f'{self.get_flag}{self.name}{self.by_value_flag}{get_args}\n'
 
 
-        if self.ownership_getter.by_reference:
-            get_text+= f'{self.element_type.type_name} {method_starter}'
-            get_text+= f'{self.get_flag}{self.by_reference_flag}{get_args}\n'
+            if self.ownership_getter.by_reference:
+                get_text+= f'{self.element_type.type_name} {method_starter}'
+                get_text+= f'{self.get_flag}{self.name}{self.by_reference_flag}{get_args}\n'
 
 
-        if self.ownership_getter.by_ownership:
-            get_text+= f'{self.element_type.type_name} {method_starter}'
-            get_text+= f'{self.get_flag}{self.by_ownership_flag}{get_args}\n'
+            if self.ownership_getter.by_ownership:
+                get_text+= f'{self.element_type.type_name} {method_starter}'
+                get_text+= f'{self.get_flag}{self.name}{self.by_ownership_flag}{get_args}\n'
 
 
         set_text = ''
-        set_args = f'({object_self_ref},{self.element_type.type_name} {self.name});'
-        #setter
-        if self.ownership_setter.by_value:
-            set_text+= f'void {method_starter}{self.set_flag}{self.by_value_flag}{set_args}'
+        if self.allow_setter:
+            set_args = f'({object_self_ref},{self.element_type.type_name} {self.name});'
+            #setter
+            if self.ownership_setter.by_value:
+                set_text+= f'void {method_starter}{self.set_flag}{self.by_value_flag}{set_args}'
 
 
-        if self.ownership_setter.by_reference:
-            set_text+= f'void {method_starter}{self.set_flag}{self.by_reference_flag}{set_args}'
+            if self.ownership_setter.by_reference:
+                set_text+= f'void {method_starter}{self.set_flag}{self.by_reference_flag}{set_args}'
 
-        if self.ownership_setter.by_ownership:
-            set_text+= f'void {method_starter}{self.set_flag}{self.by_ownership_flag}{set_args}'
+            if self.ownership_setter.by_ownership:
+                set_text+= f'void {method_starter}{self.set_flag}{self.by_ownership_flag}{set_args}'
 
         text = ''
         if get_text:

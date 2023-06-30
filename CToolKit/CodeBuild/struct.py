@@ -26,7 +26,7 @@ class Struct:
         self.destructor_name = construct_by_default(f'{type_name}_free',destructor_name)
         self.initializer_name = construct_by_default(f'{type_name}_new',initializer_name)
         self.copy_method_name = construct_by_default( f'{type_name}_copy',copy_method_name)
-        self.starter_method_name = construct_by_default(f'{type_name}_',starter_method_name)
+        self.starter_method_name = construct_by_default(type_name,starter_method_name)
         self.implement_copy_method = implement_copy_method
         self.implement_represent_method = implement_represent_method
         self.represent_method_name = construct_by_default(f'{type_name}_represent',represent_method_name)
@@ -53,7 +53,7 @@ class Struct:
         text += f'{self.type_name} * {self.initializer_name}();\n\n'
 
         for i in self.elements:
-            text+= i.implement_getter_and_setter_declaration(self.starter_method_name,self.self_name)
+            text+= i.implement_getter_and_setter_declaration(self.starter_method_name,self._implement_self_ref())
 
 
         if self.implement_copy_method:
