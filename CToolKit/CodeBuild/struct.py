@@ -38,7 +38,10 @@ class Struct:
     def generate_declaration(self,output:str=None)->str:
 
         #struct declaration
-        text =f'typedef struct {self.name}' + '{\n'
+        text =f'typedef struct {self.name}' + '{\n\n'
+        for i in self.elements:
+            text+=f'\t{i.implement_declaration()}\n'
+
         text+='}'+f'{self.name};\n\n'
 
 
