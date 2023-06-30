@@ -53,9 +53,7 @@ class Struct:
         text += f'{self.type_name} * {self.initializer_name}();\n\n'
 
         for i in self.elements:
-            pass
-
-
+            text+= i.implement_getter_and_setter_declaration(self.starter_method_name,self.self_name)
 
 
         if self.implement_copy_method:
