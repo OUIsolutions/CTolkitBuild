@@ -14,7 +14,7 @@ class StructElement:
             name:str,
             element_type:type or Element or ElementPointer,
             ownership_setter: OwnerShip= BY_VALUE,
-            ownership_getter: OwnerShip= BY_VALUE_AND_OWNERSHIP,
+            ownership_getter: OwnerShip= BY_VALUE_AND_REFERENCE,
             private:bool=False,
             private_flag:str='_',
             allow_getter: bool=None,
@@ -32,8 +32,19 @@ class StructElement:
 
 
         self.allow_getter = allow_getter
+
         if allow_getter is None:
-            pass
+            if element_type.pointer:
+                self.allow_getter = True
+            else:
+                self.allow_getter = False
+
+        if allow_setter is None:
+            if element_type.pointer:
+                self.allow_setter = True
+            else:
+                self.allow_setter = False
+
 
         self.allow_setter = allow_setter
 
