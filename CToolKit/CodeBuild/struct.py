@@ -1,4 +1,3 @@
-from .extra import save_file, construct_by_default
 from .struct_element import StructElement
 from typing import List
 
@@ -8,52 +7,58 @@ class Struct:
     def __init__(self,
                  type_name: str,
                  elements: List[StructElement],
-                 initializer_name: str = None,
-                 starter_method_name:str=None,
-                 destructor_name: str = None,
+
+                 initializer_name='@typename@new',
+                 destructor_name='@typename@free',
+
+                 implement_represent_method=True,
+                 represent_method_name='@typename@represent',
+
+                 implement_copy_method=True,
+                 copy_method_name='@typename@copy',
+
                  allow_function_pointers: bool = False,
-                 implement_copy_method: bool = True,
-                 copy_method_name: str = None,
-                 implement_represent_method:bool = True,
-                 represent_method_name:str=None,
-                 self_name: str = 'self'
+
+
+                 object_reference: str = 'self'
                  ):
 
         self.type_name = type_name
         self.elements = elements
         self.allow_function_pointers = allow_function_pointers
-        self.self_name = self_name
-        self.destructor_name = construct_by_default(f'{type_name}_free',destructor_name)
-        self.initializer_name = construct_by_default(f'{type_name}_new',initializer_name)
-        self.copy_method_name = construct_by_default( f'{type_name}_copy',copy_method_name)
-        self.starter_method_name = construct_by_default(type_name,starter_method_name)
+        self.object_reference = object_reference
+
+        self.destructor_name = destructor_name.replace('@typename@',type_name)
+        self.initializer_name = initializer_name.replace('@typename@',type_name)
+        self.copy_method_name = copy_method_name.replace('@typename@',type_name)
+
         self.implement_copy_method = implement_copy_method
         self.implement_represent_method = implement_represent_method
-        self.represent_method_name = construct_by_default(f'{type_name}_represent',represent_method_name)
-
+        self.represent_method_name = represent_method_name.replace('@typename@',type_name)
 
 
     def _implement_self_ref(self)->str:
-        return f'{self.type_name}* {self.self_name}'
+        return f'{self.type_name}* {self.object_reference}'
 
     def implement_self_type(self)->str:
         return f'{self.type_name}*'
 
 
-    def generate_declaration(self, output: str = None) -> str:
-
-        # struct declaration
+    def _implement_struct_declaration(self):
         text = f'typedef struct {self.type_name}' + '{\n\n'
         for i in self.elements:
             text += f'\t{i.implement_declaration()}\n'
 
         text += '\n}' + f'{self.type_name};\n\n'
+        return text
+
+    def generate_declaration(self, output: str = None) -> str:
+
+        # struct declaration
+        text = self._implement_struct_declaration()
 
         # constructr method
         text += f'{self.implement_self_type()} {self.initializer_name}();\n\n'
-
-        for i in self.elements:
-            text+= i.implement_getter_and_setter_declaration(self.starter_method_name,self._implement_self_ref())
 
 
         if self.implement_copy_method:
@@ -65,5 +70,6 @@ class Struct:
 
         if output:
             save_file(text, output)
+
 
         return text

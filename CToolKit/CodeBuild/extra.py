@@ -10,7 +10,3 @@ def save_file(content:str,output:str):
     with open(output,'w')  as arq:
         arq.write(content)
 
-def construct_by_default(element:str,default:str):
-    if element is None:
-        return default
-    return element

@@ -11,20 +11,18 @@ class StructElement:
 
     def __init__(
             self,
-            name:str,
+            name: str,
             element_type:type or Element or ElementPointer,
-            ownership_setter: OwnerShip= BY_VALUE,
-            ownership_getter: OwnerShip= BY_VALUE_AND_REFERENCE,
+            ownership_setter: OwnerShip = BY_VALUE,
+            ownership_getter: OwnerShip = BY_VALUE_AND_REFERENCE,
 
-            set_flag:str='_set_',
-            get_flag:str='_get_',
-            by_value_flag:str='_by_value',
-            by_reference_flag:str='_by_reference',
-            by_ownership_flag:str='_by_ownership',
-
-            private:bool=False,
-            private_flag:str='_',
-
+            set_flag='_set_',
+            get_flag='_get_',
+            by_value_flag='_by_value',
+            by_reference_flag='_by_reference',
+            by_ownership_flag='_by_ownership',
+            private=False,
+            private_flag='_',
 
             allow_getter: bool=None,
             allow_setter:bool=None,
