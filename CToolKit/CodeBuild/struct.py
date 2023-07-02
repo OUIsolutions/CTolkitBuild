@@ -9,14 +9,14 @@ class Struct:
                  name: str,
                  elements: List[StructElement],
 
-                 initializer_name='@name@new',
-                 destructor_name='@name@free',
+                 initializer_name='@name@_new',
+                 destructor_name='@name@_free',
 
                  implement_represent_method=True,
-                 represent_method_name='@name@represent',
+                 represent_method_name='@name@_represent',
 
                  implement_copy_method=True,
-                 copy_method_name='@name@copy',
+                 copy_method_name='@name@_copy',
 
                  allow_function_pointers: bool = False,
 
@@ -38,37 +38,12 @@ class Struct:
         self.represent_method_name = represent_method_name.replace('@name@',name)
 
 
-    def _implement_self_ref(self)->str:
-        return f'{self.name}* {self.object_reference}'
-
-    def implement_self_type(self)->str:
-        return f'{self.name}*'
-
-
-    def _implement_struct_declaration(self):
-        text = f'typedef struct {self.name}' + '{\n\n'
-        for i in self.elements:
-            text += f'\t{i.implement_declaration()}\n'
-
-        text += '\n}' + f'{self.name};\n\n'
-        return text
-
+    
     def generate_declaration(self, output: str = None) -> str:
 
         # struct declaration
-        text = self._implement_struct_declaration()
-
-        # constructr method
-        text += f'{self.implement_self_type()} {self.initializer_name}();\n\n'
-
-
-        if self.implement_copy_method:
-            text += f'{self.implement_self_type()}  {self.copy_method_name}({self._implement_self_ref()});\n\n'
-
-
-        # desctructor method
-        text += f'void {self.destructor_name}({self._implement_self_ref()});\n\n'
-
+        text = ''
+        
         if output:
             save_file(text, output)
 
