@@ -5,7 +5,6 @@ from .Elements.element import Element
 from .Elements.element_pointer import ElementPointer
 from .ownership import OwnerShip
 from .ownership_choices import  *
-from .extra import construct_by_default
 
 class StructElement:
 
@@ -15,7 +14,6 @@ class StructElement:
             element_type:type or Element or ElementPointer,
             ownership_setter: OwnerShip = BY_VALUE,
             ownership_getter: OwnerShip = BY_VALUE_AND_REFERENCE,
-
             set_flag='_set_',
             get_flag='_get_',
             by_value_flag='_by_value',
@@ -27,9 +25,9 @@ class StructElement:
             allow_getter: bool=None,
             allow_setter:bool=None,
 
-            required_at_start:bool=False,
+            required_at_start=False,
             defaults_to:Any=None,
-            ownership_flag:str =None
+            ownership_flag='@name@_@private_flag@_owner'
     ):
 
 
@@ -53,7 +51,7 @@ class StructElement:
         self.name = name
         if private:
             self.name = private_flag + name
-        self.ownership_flag =construct_by_default(f'{private_flag}{self.name}_owner',ownership_flag)
+        self.ownership_flag =ownership_flag.replace('@name@',name).replace('@private_flag@',private_flag)
         if allow_getter is None:
             if private:
                 self.allow_getter = False

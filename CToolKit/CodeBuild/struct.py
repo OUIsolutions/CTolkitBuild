@@ -1,21 +1,22 @@
 from .struct_element import StructElement
+from .extra import  save_file
 from typing import List
 
 
 class Struct:
 
     def __init__(self,
-                 type_name: str,
+                 name: str,
                  elements: List[StructElement],
 
-                 initializer_name='@typename@new',
-                 destructor_name='@typename@free',
+                 initializer_name='@name@new',
+                 destructor_name='@name@free',
 
                  implement_represent_method=True,
-                 represent_method_name='@typename@represent',
+                 represent_method_name='@name@represent',
 
                  implement_copy_method=True,
-                 copy_method_name='@typename@copy',
+                 copy_method_name='@name@copy',
 
                  allow_function_pointers: bool = False,
 
@@ -23,33 +24,33 @@ class Struct:
                  object_reference: str = 'self'
                  ):
 
-        self.type_name = type_name
+        self.name = name
         self.elements = elements
         self.allow_function_pointers = allow_function_pointers
         self.object_reference = object_reference
 
-        self.destructor_name = destructor_name.replace('@typename@',type_name)
-        self.initializer_name = initializer_name.replace('@typename@',type_name)
-        self.copy_method_name = copy_method_name.replace('@typename@',type_name)
+        self.destructor_name = destructor_name.replace('@name@',name)
+        self.initializer_name = initializer_name.replace('@name@',name)
+        self.copy_method_name = copy_method_name.replace('@name@',name)
 
         self.implement_copy_method = implement_copy_method
         self.implement_represent_method = implement_represent_method
-        self.represent_method_name = represent_method_name.replace('@typename@',type_name)
+        self.represent_method_name = represent_method_name.replace('@name@',name)
 
 
     def _implement_self_ref(self)->str:
-        return f'{self.type_name}* {self.object_reference}'
+        return f'{self.name}* {self.object_reference}'
 
     def implement_self_type(self)->str:
-        return f'{self.type_name}*'
+        return f'{self.name}*'
 
 
     def _implement_struct_declaration(self):
-        text = f'typedef struct {self.type_name}' + '{\n\n'
+        text = f'typedef struct {self.name}' + '{\n\n'
         for i in self.elements:
             text += f'\t{i.implement_declaration()}\n'
 
-        text += '\n}' + f'{self.type_name};\n\n'
+        text += '\n}' + f'{self.name};\n\n'
         return text
 
     def generate_declaration(self, output: str = None) -> str:
