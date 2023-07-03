@@ -8,7 +8,7 @@ from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
 from CToolKit.ComandLineExecution import ComandLineExecution
 from .valgrind_parser import parse_valgrind_result
 from platform import system as current_os
-
+from os.path import isdir
 from os import listdir,remove
 
 
@@ -134,11 +134,15 @@ def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True)
     """
     files = listdir(folder)
     for file in files:
+        file_path = f'{folder}/{file}'
+        if isdir(file_path):
+            execute_test_for_folder(file_path)
+        
         if not file.endswith('.c') or file.endswith('.cpp'):
             continue
-
+            
         try:
-            execute_test_for_file(compiler, f'{folder}/{file}')
+            execute_test_for_file(compiler, file_path)
             if print_values:
                 print('\033[92m'+f'passed: {file}' + '\33[37m')
 
