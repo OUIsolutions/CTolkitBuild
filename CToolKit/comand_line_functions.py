@@ -84,12 +84,16 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     command = f'valgrind  ./{binary_file} ' + ' '.join(flags)
     result = ComandLineExecution(command)
 
-    parsed_result = parse_valgrind_result(result.output)
+    try:
+        parsed_result = parse_valgrind_result(result.output)
+    except:
+        parsed_result = None
+        
     if 'ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)' not in result.output:
-        raise ValgrindError(parsed_result)
+        raise ValgrindError(result.output,parsed_result)
 
     if 'All heap blocks were freed -- no leaks are possible' not in result.output:
-        raise ValgrindLeak(parsed_result)
+        raise ValgrindLeak(result.output,parsed_result)
     
     return parsed_result
 

@@ -3,8 +3,8 @@ from CToolKit.Errors.ComandLineWarning import ComandLineWarning
 
 class ValgrindError(ComandLineWarning):
     
-    def __init__(self, message: str or dict ):
+    def __init__(self, message: str,valgrind_status:dict  ):
         super().__init__(str(message))
-        self.valgrind_status = message
+        self.valgrind_status = valgrind_status
      
 
