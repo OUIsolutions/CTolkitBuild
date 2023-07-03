@@ -5,7 +5,6 @@ from CToolKit.Errors.CopilationWarning import CopilationWarning
 
 from CToolKit.Errors.ValgrindError import  ValgrindError
 from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
-from CToolKit.Errors.FolderPressetError import FolderPressetError
 
 from CToolKit.ComandLineExecution import ComandLineExecution
 from .valgrind_parser import parse_valgrind_result
@@ -127,26 +126,34 @@ def execute_test_for_file(compiler:str, file: str,raise_warnings=True)->dict:
 
 
 
-def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname:str)->dict:
+def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname:str,raise_warnings:bool)->dict:
     files = listdir(filepath)
     target_file_name = f'{dirname.replace("$$","")}.c'
     target = f'{filepath}/{target_file_name}'
     
     if target_file_name not in files:
-        raise FolderPressetError(
-            f'{target} not in {filepath}'
-        )
+        raise FileNotFoundError(filepath)
     
-    target_result = None 
+    expected_file_name = None 
     
     for file in files:
         if file.startswith('expected'):
-            target_result = f'{filepath}/file'
+            expected_file_name = f'{filepath}/file'
     
-    if target_result is None:
-        raise FolderPressetError(
-            f'expected file not in {filepath}'
+   
+    if expected_file_name is None:
+        raise FileNotFoundError(
+            'expected.txt'
         )
+    
+    expected = None 
+    with open(expected_file_name,'r') as arq:
+        if '.trim' in expected_file_name:
+            
+            pass 
+        
+    r = execute_test_for_file(compiler,target_file_name,raise_warnings)
+    
     
     
     if print_values:
@@ -177,7 +184,7 @@ def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True,
         if isdir(file_path):
             
             if file.startswith('$$'):
-                execute_folder_presset(compiler,file_path)                
+                execute_folder_presset(compiler,print_values,file_path,file,raise_warnings)                
             
             else:
                 execute_test_for_folder(compiler,file_path,print_values)
