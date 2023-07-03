@@ -1,0 +1,7 @@
+
+
+typedef struct {{Name}}{
+
+
+
+}{{Name}};

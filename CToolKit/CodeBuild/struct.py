@@ -43,9 +43,11 @@ class Struct:
 
         # struct declaration
         text = ''
-        
+
+
         if output:
             save_file(text, output)
+
 
 
         return text
