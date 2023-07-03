@@ -87,11 +87,10 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     command = f'valgrind  ./{binary_file} ' + ' '.join(flags)
     result = ComandLineExecution(command)
 
-    try:
-        parsed_result = parse_valgrind_result(result.output)
-    except:
-        parsed_result = None
-        
+    #(result.output)
+    parsed_result = parse_valgrind_result(result.output)
+
+
     if 'ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)' not in result.output:
         raise ValgrindError(result.output,parsed_result)
 
@@ -130,17 +129,19 @@ def execute_test_for_file(compiler:str, file: str,raise_warnings=True)->dict:
 
 def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname:str,raise_warnings:bool)->dict:
     files = listdir(filepath)
-    target_file_name = f'{dirname.replace("$$","")}.c'
+
+    target_file_name = f'{dirname.replace("##","")}.c'
     target = f'{filepath}/{target_file_name}'
-    
+
     if target_file_name not in files:
         raise FileNotFoundError(filepath)
-    
+
+
     expected_file_name = None 
     
     for file in files:
         if file.startswith('expected'):
-            expected_file_name = f'{filepath}/file'
+            expected_file_name = f'{filepath}/{file}'
     
    
     if expected_file_name is None:
@@ -150,7 +151,7 @@ def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname
     
     expected = sanitize_value(expected_file_name)
         
-    r = execute_test_for_file(compiler,target_file_name,raise_warnings)
+    r = execute_test_for_file(compiler,target,raise_warnings)
 
     if expected != r['output']:
         raise NotExpectedResult(r['output'],expected)
@@ -182,8 +183,8 @@ def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True,
         
         if isdir(file_path):
             
-            if file.startswith('$$'):
-                execute_folder_presset(compiler,print_values,file_path,file,raise_warnings)                
+            if file.startswith('##'):
+                execute_folder_presset(compiler, print_values, file_path, file, raise_warnings)
             
             else:
                 execute_test_for_folder(compiler,file_path,print_values)
