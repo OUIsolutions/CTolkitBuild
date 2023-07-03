@@ -5,7 +5,7 @@ int main(){
             char *r = malloc(50);
             //free(r);
     }
-    printf("aaaaaaaaaaaa");
+    printf("\naaaaaaaaaaaa\n");
     /*expected_trim:
         
     */
