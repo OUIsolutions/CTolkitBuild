@@ -146,7 +146,8 @@ def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname
             'expected.txt'
         )
     
-    expected = None 
+    expected = None
+    
     with open(expected_file_name,'r') as arq:
         if '.trim' in expected_file_name:
             
