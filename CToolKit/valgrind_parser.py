@@ -14,10 +14,11 @@ def parse_block_line_based_on_key(text:str,key:str)->dict:
     return parse_in_blocks(text)
 
 
+
 def parse_valgrind_result(text:str)->dict:
     
     result  = {
-        'definitely lost':parse_block_line_based_on_key(text,'definitely lost')
+        'in use at exit':parse_block_line_based_on_key(text,'in use at exit')
     }
     return result
 
