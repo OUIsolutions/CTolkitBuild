@@ -2,12 +2,12 @@ import json
 from typing import List
 def trim_lines(text:str)->List[str]:
     lines = text.split('\n')
-    return list(map(lambda x: x.strip(),lines))
+    striped = list(map(lambda x: x.strip(),lines))
+    return list(filter(lambda x: x != '' , striped))
 
-def sanitize_value(filename:str)->dict or str or List[str]:
+def sanitize_value(filename:str,content:str=None)->dict or str or List[str]:
 
-    with open(filename,'r') as arq:
-        content = arq.read()
+
 
     if filename.endswith('.json'):
         return json.loads(content)

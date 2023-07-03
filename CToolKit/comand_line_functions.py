@@ -148,13 +148,17 @@ def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname
         raise FileNotFoundError(
             'expected.txt'
         )
-    
-    expected = sanitize_value(expected_file_name)
+
+    with open(expected_file_name,'r') as arq:
+        expected = sanitize_value(expected_file_name,arq.read())
         
     r = execute_test_for_file(compiler,target,raise_warnings)
 
-    if expected != r['output']:
-        raise NotExpectedResult(r['output'],expected)
+    
+    saninitzed_result = sanitize_value(expected_file_name,r['output'])
+
+    if expected != saninitzed_result:
+        raise NotExpectedResult(saninitzed_result,expected)
 
     if print_values:
         print('\033[92m'+f'\tpassed: {target_file_name}' + '\33[37m')
