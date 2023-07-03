@@ -1,5 +1,8 @@
+
+
 def convert_num(num:str)->str:
     return int(num.replace(',',''))
+
 
 def parse_in_blocks(text:str)->dict:
     result = {}
@@ -19,6 +22,11 @@ def parse_block_line_based_on_key(text:str,key:str)->dict:
     return parse_in_blocks(text)
 
 
+def extract_output(text:str):
+    target = text.split('Command:')[1]
+    return target.split('==')[2]
+
+    
 def parse_heap_usage(text:str)->dict:
     target = text.split('total heap usage')[1]
     positions = target.split(' ')
@@ -32,6 +40,7 @@ def parse_heap_usage(text:str)->dict:
 def parse_valgrind_result(text:str)->dict:
     
     result  = {
+        'output': extract_output(text),
         'in use at exit':parse_block_line_based_on_key(text,'in use at exit'),
         'definitely lost':parse_block_line_based_on_key(text,'definitely lost'),
         'indirectly lost':parse_block_line_based_on_key(text,'indirectly lost'),
