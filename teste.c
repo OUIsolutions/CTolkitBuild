@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 int main(){
-    //char *r = malloc(50);
-
+    for(int i =0;  i < 1000;i++){
+            char *r = malloc(50);
+            free(r);
+    }
     printf("aaaaaaaaaaaa");
+    /*expected_trim:
+        
+    */
 }
