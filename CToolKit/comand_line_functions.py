@@ -135,8 +135,9 @@ def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True)
     files = listdir(folder)
     for file in files:
         file_path = f'{folder}/{file}'
+        
         if isdir(file_path):
-            execute_test_for_folder(file_path)
+            execute_test_for_folder(compiler,file_path,print_values)
         
         if not file.endswith('.c') or file.endswith('.cpp'):
             continue
