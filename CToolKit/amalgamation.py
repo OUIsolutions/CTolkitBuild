@@ -2,8 +2,6 @@ from os.path import join
 
 
 
-
-
 def get_action(referencer_dir: str, line: str) -> str or None:
     line = line.strip()
     if not line.startswith('#include'):

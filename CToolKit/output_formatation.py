@@ -17,10 +17,3 @@ def sanitize_value(filename:str)->dict or str or List[str]:
 
     return trim_lines(content)
 
-
-r = sanitize_value('aaanot_trim.json')
-print(r)
-
-
-
-

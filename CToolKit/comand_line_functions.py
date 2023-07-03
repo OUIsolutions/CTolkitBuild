@@ -5,12 +5,14 @@ from CToolKit.Errors.CopilationWarning import CopilationWarning
 
 from CToolKit.Errors.ValgrindError import  ValgrindError
 from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
+from CToolKit.Errors.NotExpectedResult import NotExpectedResult
 
 from CToolKit.ComandLineExecution import ComandLineExecution
 from .valgrind_parser import parse_valgrind_result
 from platform import system as current_os
 from os.path import isdir
 from os import listdir,remove
+from .output_formatation import sanitize_value
 
 
 def compile_project_by_command(command: str, raise_errors: bool = True, raise_warnings: bool = True):
@@ -146,17 +148,13 @@ def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname
             'expected.txt'
         )
     
-    expected = None
-    
-    with open(expected_file_name,'r') as arq:
-        if '.trim' in expected_file_name:
-            
-            pass 
+    expected = sanitize_value(expected_file_name)
         
     r = execute_test_for_file(compiler,target_file_name,raise_warnings)
-    
-    
-    
+
+    if expected != r['output']:
+        raise NotExpectedResult(r['output'],expected)
+
     if print_values:
         print('\033[92m'+f'\tpassed: {target_file_name}' + '\33[37m')
 
