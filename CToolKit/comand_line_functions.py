@@ -68,7 +68,7 @@ def compile_project(compiler: str, file: str, output: str = None, flags: List[st
 
 
 
-def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
+def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     """ will test an binary execution with valgrind
     Args:
         binary_file (str): the binary execution ex: test.out
@@ -89,9 +89,12 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None):
 
     if 'All heap blocks were freed -- no leaks are possible' not in result.output:
         raise ValgrindLeak(result.output)
+    
+    
+    
 
 
-def execute_test_for_file(compiler:str, file: str):
+def execute_test_for_file(compiler:str, file: str)->dict:
     """Execute an presset test for the current file
     Args:
         compiler (str): the compiler to use, ex: gcc or clang
@@ -107,12 +110,12 @@ def execute_test_for_file(compiler:str, file: str):
         raise_warnings=False
     )
     try:
-        test_binary_with_valgrind(result)
+        valgrind_test = test_binary_with_valgrind(result)
         remove(result)
     except Exception as e:
         remove(result)
         raise e
-
+    return valgrind_test
 
 def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True):
     """execute tests for all .c or cpp files in the given folder
