@@ -100,12 +100,12 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     
 
 
-def execute_test_for_file(compiler:str, file: str)->dict:
+def execute_test_for_file(compiler:str, file: str,raise_warnings=True)->dict:
     """Execute an presset test for the current file
     Args:
         compiler (str): the compiler to use, ex: gcc or clang
         file (str): the file to copile , ex: test.c
-
+        raise_warnings(bool): if its to raise warnings generated
     Raises:
         e: all possible errors
     """
@@ -113,7 +113,7 @@ def execute_test_for_file(compiler:str, file: str)->dict:
         compiler,
         file,
         raise_errors=True,
-        raise_warnings=False
+        raise_warnings=raise_warnings
     )
     try:
         valgrind_test = test_binary_with_valgrind(result)
@@ -123,32 +123,46 @@ def execute_test_for_file(compiler:str, file: str)->dict:
         raise e
     return valgrind_test
 
-def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True):
+def execute_folder_presset(compiler:str, filepath: str)->dict:
+    pass 
+    
+def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True,raise_warnings=True):
     """execute tests for all .c or cpp files in the given folder
     Args:
         compiler (str): the compiler, ex: gcc , or clang
         folder (str): the folder to copile
         print_values (bool, optional): if is to print errors and sucess
+        raise_warnings(bool): if its to raise warnings generated
     Raises:
         e: if happen some error
     """
+    
+    print('\033[92m'+f'folder: {folder}')
+    
     files = listdir(folder)
     for file in files:
         file_path = f'{folder}/{file}'
         
         if isdir(file_path):
-            execute_test_for_folder(compiler,file_path,print_values)
+            
+            if file.startswith('$$'):
+                execute_folder_presset(compiler,file_path)                
+            
+            else:
+                execute_test_for_folder(compiler,file_path,print_values)
+            continue
+
+
         
         if not file.endswith('.c') or file.endswith('.cpp'):
             continue
             
         try:
-            execute_test_for_file(compiler, file_path)
+            execute_test_for_file(compiler, file_path,raise_warnings)
             if print_values:
-                print('\033[92m'+f'passed: {file}' + '\33[37m')
-
+                print('\033[92m'+f'\tpassed: {file_path}' + '\33[37m')
         except Exception as e:
             if print_values:
-                print('\033[91m' + f'fail with file: {file}' + '\33[37m')
+                print('\033[91m' + f'fail with file: {file_path}' + '\33[37m')
                 print('\033[0m')
             raise e
