@@ -5,6 +5,8 @@ from CToolKit.Errors.CopilationWarning import CopilationWarning
 
 from CToolKit.Errors.ValgrindError import  ValgrindError
 from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
+from CToolKit.Errors.FolderPressetError import FolderPressetError
+
 from CToolKit.ComandLineExecution import ComandLineExecution
 from .valgrind_parser import parse_valgrind_result
 from platform import system as current_os
@@ -123,8 +125,37 @@ def execute_test_for_file(compiler:str, file: str,raise_warnings=True)->dict:
         raise e
     return valgrind_test
 
-def execute_folder_presset(compiler:str, filepath: str)->dict:
-    pass 
+
+
+def execute_folder_presset(compiler:str,print_values:bool, filepath: str,dirname:str)->dict:
+    files = listdir(filepath)
+    target_file_name = f'{dirname.replace("$$","")}.c'
+    target = f'{filepath}/{target_file_name}'
+    
+    if target_file_name not in files:
+        raise FolderPressetError(
+            f'{target} not in {filepath}'
+        )
+    
+    target_result = None 
+    
+    for file in files:
+        if file.startswith('expected'):
+            target_result = f'{filepath}/file'
+    
+    if target_result is None:
+        raise FolderPressetError(
+            f'expected file not in {filepath}'
+        )
+    
+    
+    if print_values:
+        print('\033[92m'+f'\tpassed: {target_file_name}' + '\33[37m')
+
+     
+    
+    
+          
     
 def execute_test_for_folder(compiler:str, folder: str, print_values:bool = True,raise_warnings=True):
     """execute tests for all .c or cpp files in the given folder
