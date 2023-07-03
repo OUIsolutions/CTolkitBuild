@@ -2,5 +2,9 @@ from CToolKit.Errors.ComandLineWarning import ComandLineWarning
 
 
 class ValgrindError(ComandLineWarning):
-    pass
+    
+    def __init__(self, message: str or dict ):
+        super().__init__(str(message))
+        self.valgrind_status = message
+     
 

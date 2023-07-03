@@ -1,10 +1,12 @@
+def convert_num(num:str)->str:
+    return int(num.replace(',',''))
 
 def parse_in_blocks(text:str)->dict:
     result = {}
-    result ['bytes'] = int(text.split(' ')[1])
+    result ['bytes'] = convert_num(text.split(' ')[1])
     in_element_text = text.split('in')[1]
     
-    result['blocks'] = int(in_element_text.split(' ')[1])
+    result['blocks'] = convert_num(in_element_text.split(' ')[1])
     return result
 
 
@@ -18,9 +20,9 @@ def parse_heap_usage(text:str)->dict:
     target = text.split('total heap usage')[1]
     positions = target.split(' ')
     return {
-        'allocs':int(positions[1].replace(',','')),
-        'frees':int(positions[3].replace(',','')),
-        'bytes allocated': int(positions[5].replace(',',''))
+        'allocs':convert_num(positions[1]),
+        'frees':convert_num(positions[3]),
+        'bytes allocated': convert_num(positions[5])
     }
     
     
