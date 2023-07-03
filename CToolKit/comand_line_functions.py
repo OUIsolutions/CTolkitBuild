@@ -6,7 +6,7 @@ from CToolKit.Errors.CopilationWarning import CopilationWarning
 from CToolKit.Errors.ValgrindError import  ValgrindError
 from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
 from CToolKit.ComandLineExecution import ComandLineExecution
-
+from .valgrind_parser import parse_valgrind_result
 from platform import system as current_os
 
 from os import listdir,remove
@@ -84,13 +84,15 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     command = f'valgrind  ./{binary_file} ' + ' '.join(flags)
     result = ComandLineExecution(command)
 
+    parsed_result = parse_valgrind_result(result.output)
     if 'ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)' not in result.output:
-        raise ValgrindError(result.output)
+        raise ValgrindError(parsed_result)
 
     if 'All heap blocks were freed -- no leaks are possible' not in result.output:
-        raise ValgrindLeak(result.output)
+        raise ValgrindLeak(parsed_result)
     
-    print(result.output)
+    return parsed_result
+
     
 
 
