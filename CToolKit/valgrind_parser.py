@@ -13,14 +13,16 @@ def parse_block_line_based_on_key(text:str,key:str)->dict:
     text = target.split('\n')[0]
     return parse_in_blocks(text)
 
+
 def parse_heap_usage(text:str)->dict:
     target = text.split('total heap usage')[1]
     positions = target.split(' ')
     return {
-        'allocs':int(positions[1]),
-        'frees':int(positions[3]),
+        'allocs':int(positions[1].replace(',','')),
+        'frees':int(positions[3].replace(',','')),
         'bytes allocated': int(positions[5].replace(',',''))
     }
+    
     
 def parse_valgrind_result(text:str)->dict:
     
