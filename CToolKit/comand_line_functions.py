@@ -131,7 +131,7 @@ def execute_test_for_file(compiler:str, file: str,use_valgrind=True,raise_warnin
 
 
 
-def execute_folder_presset(compiler:str,print_values:bool,use_valgrind:bool, filepath: str,dirname:str,raise_warnings:bool)->dict or ComandLineExecution:
+def execute_folder_presset(compiler:str,use_valgrind:bool, filepath: str,dirname:str,raise_warnings:bool)->dict or ComandLineExecution:
     files = listdir(filepath)
 
     target_file_name = f'{dirname.replace("##","")}.c'
@@ -167,8 +167,6 @@ def execute_folder_presset(compiler:str,print_values:bool,use_valgrind:bool, fil
     if expected != saninitzed_result:
         raise NotExpectedResult(saninitzed_result,expected)
 
-    if print_values:
-        print('\033[92m'+f'\tpassed: {target_file_name}' + '\33[37m')
 
     return r
 
@@ -196,7 +194,14 @@ def execute_test_for_folder(compiler:str, folder: str, print_values = True,use_v
         if isdir(file_path):
             
             if file.startswith('##'):
-                execute_folder_presset(compiler, print_values,use_valgrind, file_path, file, raise_warnings)
+
+                try:
+                    execute_folder_presset(compiler,use_valgrind, file_path, file, raise_warnings)
+                    print('\033[92m' + f'\tpassed: {file}' + '\33[37m')
+                except Exception as e:
+                    print('\033[91m' + f'fail with folder: {file}' + '\33[37m')
+                    raise e
+
             else:
                 execute_test_for_folder(compiler,file_path,print_values, use_valgrind,raise_warnings)
             continue
