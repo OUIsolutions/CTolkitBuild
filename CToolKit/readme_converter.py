@@ -1,3 +1,4 @@
+from typing import Callable
 import json
 
 
@@ -9,9 +10,7 @@ def get_code_reference(line:str)->str or None:
 
     for letter in line:
 
-
         if found_start == False:
-
             if letter == ' ':
                 continue
 
@@ -82,7 +81,7 @@ def parse_readme_lexer(text:str)->list:
     return constructed
 
 
-def include_code_in_markdown(markdown_file:str,save_file:bool=True)->str:
+def include_code_in_markdown(markdown_file:str,save_file:bool=True,modifier:Callable=None)->str:
     """include all <!--codeof:teste.c--> in the given markdown file
     Args:
         markdown_file (str):the markdown file, ex: README.md
@@ -105,7 +104,11 @@ def include_code_in_markdown(markdown_file:str,save_file:bool=True)->str:
                 with open(l['ref'] ,'r') as ref_arq:
 
                     text+=f'~~~{l["extension"]}\n'
-                    text+=ref_arq.read()
+                    ref_text = ref_arq.read()
+                    if modifier:
+                        text+=modifier(ref_text)
+                    else:
+                        text+=ref_text
                     text+='\n~~~\n'
 
     if '\n' in text:
