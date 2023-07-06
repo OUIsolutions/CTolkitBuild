@@ -130,24 +130,24 @@ def execute_test_for_file(compiler:str, file: str,use_valgrind=True,raise_warnin
     return valgrind_test
 
 
-
-def execute_folder_presset(compiler:str,use_valgrind:bool, filepath: str,dirname:str,raise_warnings:bool)->dict or ComandLineExecution:
-    files = listdir(filepath)
-
-    target_file_name = f'{dirname.replace("##","")}.c'
-    target = f'{filepath}/{target_file_name}'
-
-    if target_file_name not in files:
-        raise FileNotFoundError(filepath)
-
-
-    expected_file_name = None 
-    
-    for file in files:
+def get_expected_file(folder:str)->str or None:
+    for file in listdir(folder):
         if file.startswith('expected'):
-            expected_file_name = f'{filepath}/{file}'
-    
-   
+            return f'{folder}/{file}'
+
+
+def execute_folder_presset(compiler:str,use_valgrind:bool, folder: str,raise_warnings:bool)->dict or ComandLineExecution:
+    files = listdir(folder)
+
+    target = f'{folder}/exec.c'
+
+    if 'exec.c' not in files:
+        raise FileNotFoundError(folder)
+
+
+    expected_file_name = get_expected_file(folder)
+
+
     if expected_file_name is None:
         raise FileNotFoundError(
             'expected.txt'
@@ -187,34 +187,63 @@ def execute_test_for_folder(compiler:str, folder: str, print_values = True,use_v
     
     print('\033[92m'+f'folder: {folder}')
     
-    files = listdir(folder)
-    for file in files:
-        file_path = f'{folder}/{file}'
+    elements = listdir(folder)
+    for element in elements:
+        current_path = f'{folder}/{element}'
         
-        if isdir(file_path):
-            
-            if file.startswith('##'):
-
+        if isdir(current_path):
+            current_folder = current_path
+            if element.startswith('##'):
                 try:
-                    execute_folder_presset(compiler,use_valgrind, file_path, file, raise_warnings)
-                    print('\033[92m' + f'\tpassed: {file}' + '\33[37m')
+                    execute_folder_presset(compiler,use_valgrind, current_folder, raise_warnings)
+                    print('\033[92m' + f'\tpassed: {element}' + '\33[37m')
                 except Exception as e:
-                    print('\033[91m' + f'fail with folder: {file}' + '\33[37m')
+                    print('\033[91m' + f'fail with folder: {element}' + '\33[37m')
                     raise e
 
             else:
-                execute_test_for_folder(compiler,file_path,print_values, use_valgrind,raise_warnings)
+                execute_test_for_folder(compiler,current_folder,print_values,use_valgrind,raise_warnings)
             continue
 
-        if not file.endswith('.c') or file.endswith('.cpp'):
+
+        if not element.endswith('.c') or element.endswith('.cpp'):
             continue
             
         try:
-            execute_test_for_file(compiler, file_path,use_valgrind,raise_warnings)
+            execute_test_for_file(compiler, current_path,use_valgrind,raise_warnings)
             if print_values:
-                print('\033[92m'+f'\tpassed: {file_path}' + '\33[37m')
+                print('\033[92m'+f'\tpassed: {element}' + '\33[37m')
         except Exception as e:
             if print_values:
-                print('\033[91m' + f'fail with file: {file_path}' + '\33[37m')
+                print('\033[91m' + f'fail with file: {element}' + '\33[37m')
                 print('\033[0m')
             raise e
+
+
+
+def create_code_presset(folder:str):
+
+    expected_file_name = None
+    for file in  listdir(folder):
+        if file.startswith('expected'):
+            expected_file_name = f'{folder}/{file}'
+            break
+
+
+    if expected_file_name is not None:
+        return
+
+
+
+
+
+def generate_output_of_execution(folder:str):
+    files = listdir(folder)
+    for file in files:
+        file_path = f'{folder}/{file}'
+        if isdir(file_path):
+            if file.startswith('##'):
+                create_code_presset(file_path)
+                continue
+            generate_output_of_execution(file_path)
+
