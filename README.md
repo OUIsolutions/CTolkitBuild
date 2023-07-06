@@ -65,8 +65,8 @@ COMPILER = 'gcc'
 FILE = 'test.c'
 OUTPUT = 'test.out'
 ct.compile_project(
- COMPILER,
  FILE,
+ COMPILER,
  OUTPUT,
  raise_errors=True,
  raise_warnings=True
@@ -101,7 +101,7 @@ import CToolKit as ct
 COMPILER = 'gcc'
 FILE = 'test.c'
 
-ct.execute_test_for_file(COMPILER,FILE)
+ct.execute_test_for_file(FILE,COMPILER)
 
 ~~~
 
@@ -113,7 +113,7 @@ import CToolKit as ct
 
 COMPILER = 'gcc'
 FOLDER ='test'
-ct.execute_test_for_folder(COMPILER,FOLDER,print_values=True)
+ct.execute_test_for_folder(FOLDER,COMPILER,print_values=True)
 
 ~~~
 
@@ -129,8 +129,8 @@ COMPILER = 'gcc'
 FILE = 'test.c'
 OUTPUT = 'test.out'
 ct.compile_project(
- COMPILER,
  FILE,
+ COMPILER,
  OUTPUT,
  raise_errors=True,
  raise_warnings=True

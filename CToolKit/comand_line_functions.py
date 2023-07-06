@@ -37,7 +37,7 @@ def compile_project_by_command(command: str, raise_errors: bool = True, raise_wa
         raise CopilationWarning(result.output)
 
 
-def compile_project(compiler: str, file: str, output: str = None, flags: List[str] = None, raise_errors: bool = True,
+def compile_project( file: str,compiler ='gcc', output: str = None, flags: List[str] = None, raise_errors: bool = True,
                     raise_warnings: bool = True)->str:
     """Copiles an project file
 
@@ -102,7 +102,7 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     
 
 
-def execute_test_for_file(compiler:str, file: str,use_valgrind=True,raise_warnings=True)->dict or ComandLineExecution:
+def execute_test_for_file(file: str,compiler='gcc',use_valgrind=True,raise_warnings=True)->dict or ComandLineExecution:
     """Execute an presset test for the current file
     Args:
         compiler (str): the compiler to use, ex: gcc or clang
@@ -112,8 +112,8 @@ def execute_test_for_file(compiler:str, file: str,use_valgrind=True,raise_warnin
         e: all possible errors
     """
     result = compile_project(
-        compiler,
         file,
+        compiler,
         raise_errors=True,
         raise_warnings=raise_warnings
     )
@@ -158,10 +158,10 @@ def execute_folder_presset(compiler:str,use_valgrind:bool, folder: str,raise_war
         
 
     if use_valgrind:
-        r:dict = execute_test_for_file(compiler, target, True, raise_warnings)
+        r:dict = execute_test_for_file( target, compiler,True, raise_warnings)
         saninitzed_result = sanitize_value(expected_file_name,r['output'])
     else:
-        r:ComandLineExecution = execute_test_for_file(compiler, target, False, raise_warnings)
+        r:ComandLineExecution = execute_test_for_file( target,compiler, False, raise_warnings)
         saninitzed_result = sanitize_value(expected_file_name,r.output)
 
     if expected != saninitzed_result:
@@ -174,7 +174,7 @@ def execute_folder_presset(compiler:str,use_valgrind:bool, folder: str,raise_war
     
           
     
-def execute_test_for_folder(compiler:str, folder: str, print_values = True,use_valgrind=True, raise_warnings=True):
+def execute_test_for_folder(folder: str,compiler='gcc' ,print_values = True,use_valgrind=True, raise_warnings=True):
     """execute tests for all .c or cpp files in the given folder
     Args:
         compiler (str): the compiler, ex: gcc , or clang
@@ -202,7 +202,7 @@ def execute_test_for_folder(compiler:str, folder: str, print_values = True,use_v
                     raise e
 
             else:
-                execute_test_for_folder(compiler,current_folder,print_values,use_valgrind,raise_warnings)
+                execute_test_for_folder(current_folder,compiler,print_values,use_valgrind,raise_warnings)
             continue
 
 
@@ -210,7 +210,7 @@ def execute_test_for_folder(compiler:str, folder: str, print_values = True,use_v
             continue
             
         try:
-            execute_test_for_file(compiler, current_path,use_valgrind,raise_warnings)
+            execute_test_for_file( current_path,compiler,use_valgrind,raise_warnings)
             if print_values:
                 print('\033[92m'+f'\tpassed: {element}' + '\33[37m')
         except Exception as e:
@@ -234,24 +234,25 @@ def create_code_presset(compiler:str,use_valgrind:bool, folder: str,raise_warnin
     if expected_file_name is not None:
         return
 
+
     if use_valgrind:
-        r: dict = execute_test_for_file(compiler, target, True, raise_warnings)
-        saninitzed_result = sanitize_value(expected_file_name, r['output'])
+        r: dict = execute_test_for_file( target,compiler, True, raise_warnings)
+        saninitzed_result = sanitize_value('expected.txt', r['output'])
     else:
-        r: ComandLineExecution = execute_test_for_file(compiler, target, False, raise_warnings)
-        saninitzed_result = sanitize_value(expected_file_name, r.output)
+        r: ComandLineExecution = execute_test_for_file( target,compiler, False, raise_warnings)
+        saninitzed_result = sanitize_value('expected.txt', r.output)
 
     with open(f'{folder}/expected.txt','w') as arq:
         arq.write(saninitzed_result)
 
 
-def generate_output_of_execution(folder:str):
+def generate_output_of_execution(folder:str,compiler='gcc',use_valgrind=True,raise_warnings=True):
     files = listdir(folder)
     for file in files:
         file_path = f'{folder}/{file}'
         if isdir(file_path):
             if file.startswith('##'):
-                create_code_presset(file_path)
+                create_code_presset(compiler,use_valgrind,file_path,raise_warnings)
                 continue
-            generate_output_of_execution(file_path)
+            generate_output_of_execution(file_path,compiler)
 
