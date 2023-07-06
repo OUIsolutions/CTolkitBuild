@@ -221,20 +221,28 @@ def execute_test_for_folder(compiler:str, folder: str, print_values = True,use_v
 
 
 
-def create_code_presset(folder:str):
+def create_code_presset(compiler:str,use_valgrind:bool, folder: str,raise_warnings:bool):
+    files = listdir(folder)
 
-    expected_file_name = None
-    for file in  listdir(folder):
-        if file.startswith('expected'):
-            expected_file_name = f'{folder}/{file}'
-            break
+    target = f'{folder}/exec.c'
 
+    if 'exec.c' not in files:
+        raise FileNotFoundError(folder)
+
+    expected_file_name = get_expected_file(folder)
 
     if expected_file_name is not None:
         return
 
+    if use_valgrind:
+        r: dict = execute_test_for_file(compiler, target, True, raise_warnings)
+        saninitzed_result = sanitize_value(expected_file_name, r['output'])
+    else:
+        r: ComandLineExecution = execute_test_for_file(compiler, target, False, raise_warnings)
+        saninitzed_result = sanitize_value(expected_file_name, r.output)
 
-
+    with open(f'{folder}/expected.txt','w') as arq:
+        arq.write(saninitzed_result)
 
 
 def generate_output_of_execution(folder:str):
