@@ -5,14 +5,12 @@ from CToolKit.Errors.CopilationWarning import CopilationWarning
 
 from CToolKit.Errors.ValgrindError import  ValgrindError
 from CToolKit.Errors.ValgrindLeak import  ValgrindLeak
-from CToolKit.Errors.NotExpectedResult import NotExpectedResult
 
 from CToolKit.ComandLineExecution import ComandLineExecution
 from .valgrind_parser import parse_valgrind_result
 from platform import system as current_os
 from os.path import isdir
 from os import listdir,remove
-from .output_formatation import sanitize_value
 
 
 def compile_project_by_command(command: str, raise_errors: bool = True, raise_warnings: bool = True):
@@ -128,96 +126,6 @@ def execute_test_for_file(file: str,compiler='gcc',use_valgrind=True,raise_warni
         raise e
 
     return valgrind_test
-
-
-def get_expected_file(folder:str)->str or None:
-    for file in listdir(folder):
-        if file.startswith('expected'):
-            return f'{folder}/{file}'
-
-
-def execute_folder_presset(compiler:str,use_valgrind:bool, folder: str,raise_warnings:bool)->dict or ComandLineExecution:
-    files = listdir(folder)
-
-    target = f'{folder}/exec.c'
-
-    if 'exec.c' not in files:
-        raise FileNotFoundError(folder)
-
-
-    expected_file_name = get_expected_file(folder)
-
-
-    if expected_file_name is None:
-        raise FileNotFoundError(
-            'expected.txt'
-        )
-
-    with open(expected_file_name,'r') as arq:
-        expected = sanitize_value(expected_file_name,arq.read())
-        
-
-    if use_valgrind:
-        r:dict = execute_test_for_file( target, compiler,True, raise_warnings)
-        saninitzed_result = sanitize_value(expected_file_name,r['output'])
-    else:
-        r:ComandLineExecution = execute_test_for_file( target,compiler, False, raise_warnings)
-        saninitzed_result = sanitize_value(expected_file_name,r.output)
-
-    if expected != saninitzed_result:
-        raise NotExpectedResult(saninitzed_result,expected)
-
-
-    return r
-
-    
-    
-          
-    
-def execute_test_for_folder(folder: str,compiler='gcc' ,print_values = True,use_valgrind=True, raise_warnings=True):
-    """execute tests for all .c or cpp files in the given folder
-    Args:
-        compiler (str): the compiler, ex: gcc , or clang
-        folder (str): the folder to copile
-        print_values (bool, optional): if is to print errors and sucess
-        raise_warnings(bool): if its to raise warnings generated
-    Raises:
-        e: if happen some error
-    """
-    
-    print('\033[92m'+f'folder: {folder}')
-    
-    elements = listdir(folder)
-    for element in elements:
-        current_path = f'{folder}/{element}'
-        
-        if isdir(current_path):
-            current_folder = current_path
-            if element.startswith('##'):
-                try:
-                    execute_folder_presset(compiler,use_valgrind, current_folder, raise_warnings)
-                    print('\033[92m' + f'\tpassed: {element}' + '\33[37m')
-                except Exception as e:
-                    print('\033[91m' + f'fail with folder: {element}' + '\33[37m')
-                    raise e
-
-            else:
-                execute_test_for_folder(current_folder,compiler,print_values,use_valgrind,raise_warnings)
-            continue
-
-
-        if not element.endswith('.c') or element.endswith('.cpp'):
-            continue
-            
-        try:
-            execute_test_for_file( current_path,compiler,use_valgrind,raise_warnings)
-            if print_values:
-                print('\033[92m'+f'\tpassed: {element}' + '\33[37m')
-        except Exception as e:
-            if print_values:
-                print('\033[91m' + f'fail with file: {element}' + '\33[37m')
-                print('\033[0m')
-            raise e
 
 
 
