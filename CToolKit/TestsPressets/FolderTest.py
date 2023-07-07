@@ -120,3 +120,42 @@ class FolderTest:
                     print('\033[91m' + f'fail with file: {element}' + '\33[37m')
                     print('\033[0m')
                 raise e
+
+    def _create_code_presset(self,folder_path:str):
+        files = listdir(folder_path)
+
+        target = f'{folder_path}/exec.c'
+
+        if 'exec.c' not in files:
+            raise FileNotFoundError(folder)
+
+        expected_file_name = get_expected_file(folder)
+
+        if expected_file_name is not None:
+            return
+
+
+        if use_valgrind:
+            r: dict = execute_test_for_file( target,compiler, True, raise_warnings)
+            output = r['output']
+        else:
+            r: ComandLineExecution = execute_test_for_file( target,compiler, False, raise_warnings)
+            output = r.output
+
+        with open(f'{folder}/expected.txt','w') as arq:
+            arq.write(output)
+
+
+    def generate_output_of_execution(self,folder:str=None):
+        if folder is None:
+            folder = self._target_folder
+
+        files = listdir(folder)
+        for file in files:
+            file_path = f'{folder}/{file}'
+            if isdir(file_path):
+                if file.startswith('R_') or file.startswith('WR_'):
+                    create_code_presset(compiler,use_valgrind,file_path,raise_warnings)
+                    continue
+                self.generate_output_of_execution(file_path)
+
