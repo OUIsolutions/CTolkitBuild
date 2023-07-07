@@ -237,13 +237,13 @@ def create_code_presset(compiler:str,use_valgrind:bool, folder: str,raise_warnin
 
     if use_valgrind:
         r: dict = execute_test_for_file( target,compiler, True, raise_warnings)
-        saninitzed_result = sanitize_value('expected.txt', r['output'])
+        output = r['output']
     else:
         r: ComandLineExecution = execute_test_for_file( target,compiler, False, raise_warnings)
-        saninitzed_result = sanitize_value('expected.txt', r.output)
+        output = r.output
 
     with open(f'{folder}/expected.txt','w') as arq:
-        arq.write(saninitzed_result)
+        arq.write(output)
 
 
 def generate_output_of_execution(folder:str,compiler='gcc',use_valgrind=True,raise_warnings=True):
