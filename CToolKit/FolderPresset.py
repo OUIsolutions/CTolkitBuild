@@ -6,7 +6,7 @@ from .comand_line_functions import execute_test_for_file
 from .Errors.NotExpectedResult import NotExpectedResult
 from .output_formatation import  sanitize_value
 from .ComandLineExecution import ComandLineExecution
-
+import zipfile
 
 class FolderTestPresset:
 
@@ -52,6 +52,18 @@ class FolderTestPresset:
             return cpp_file
 
         raise FileNotFoundError(f'could not locate an exec.c or exec.cpp in {folder}')
+
+    def _create_side_effect_zip(self):
+        if self._side_effect_folder is None:
+            return
+
+        name = f'{self._side_effect_folder}.zip'
+        with zipfile.ZipFile(name, 'w') as zip:
+            zip.write(self._side_effect_folder)
+
+
+
+
     def _print_if_setted_to_print_test(self, element:str, passed:bool):
         if not self._print_values:
             return
@@ -67,6 +79,7 @@ class FolderTestPresset:
             print('\033[96m'+ f'\tcreated: {element}')
         else:
             print('\033[94m'+ f'\talready exist: {element}')
+
 
     def _print_if_seetted_to_print_folder(self,folder:str):
         if self._print_values:
@@ -167,8 +180,10 @@ class FolderTestPresset:
 
         with open(f'{folder}/expected.txt','w') as arq:
             self._print_if_setted_to_print_creation(execution_file,True)
-
             arq.write(output)
+
+
+
 
 
     def _execute_loop_creating_expected(self,folder:str):
@@ -193,8 +208,12 @@ class FolderTestPresset:
 
 
     def start_test(self):
+        self._create_side_effect_zip()
+
         self._execute_loop_test(self._folder)
 
 
     def generate_ouptut(self):
+        #deleting old zips
+        self._create_side_effect_zip()
         self._execute_loop_creating_expected(self._folder)
