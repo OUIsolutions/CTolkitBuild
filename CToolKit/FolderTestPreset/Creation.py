@@ -23,6 +23,8 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
                 raise_warnings=self._raise_warnings
             )
         except Exception as e:
+            changed_file = self._side_effect_folder_changed()
+            self._rebase_side_effect_folder()
             raise e
 
         changed_file = self._side_effect_folder_changed()
@@ -32,8 +34,8 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             return
 
         if changed_file:
-            print('pegou aqui\n')
             copytree(self._side_effect_folder, f'{folder}/side_effect')
+            self._rebase_side_effect_folder()
 
         if isinstance(generated_result, ComandLineExecution):
             output = generated_result.output

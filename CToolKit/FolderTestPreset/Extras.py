@@ -73,6 +73,16 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
 
         return novo_sha != self._original_sha
 
+    def _rebase_side_effect_folder(self):
+        name = f'{self._side_effect_folder}.zip'
+
+        try:
+            remove(name)
+        except FileNotFoundError:
+            pass
+        with zipfile.ZipFile(name, 'r') as zip_ref:
+            zip_ref.extract(self._side_effect_folder)
+
     def __del__(self):
         if self._side_effect_folder is None:
             return False
