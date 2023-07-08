@@ -61,7 +61,7 @@ def compile_project( file: str,compiler ='gcc', output: str = None, flags: List[
         else:
             output = file.replace('.c', '.out').replace('.cpp', '.out')
 
-    command = f'{compiler} {file} -o {output} ' + ' '.join(flags)
+    command = f'{compiler} {file} -o {output} ' + ' -'.join(flags)
     compile_project_by_command(command, raise_errors, raise_warnings)
     return output
 
@@ -82,7 +82,7 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     if flags is None:
         flags = []
 
-    command = f'valgrind  ./{binary_file} ' + ' '.join(flags)
+    command = f'valgrind  ./{binary_file} ' + ' -'.join(flags)
     result = ComandLineExecution(command)
 
     #(result.output)
@@ -100,7 +100,13 @@ def test_binary_with_valgrind(binary_file:str,flags: List[str]= None)->dict:
     
 
 
-def execute_test_for_file(file: str,compiler='gcc',use_valgrind=True,raise_warnings=True)->dict or ComandLineExecution:
+def execute_test_for_file(
+        file: str,
+        compiler='gcc',
+        use_valgrind=True,
+        raise_warnings=True,
+        copilation_flags:List[str] =None,
+        execution_flags:List[str]=None)->dict or ComandLineExecution:
     """Execute an presset test for the current file
     Args:
         compiler (str): the compiler to use, ex: gcc or clang
@@ -109,17 +115,24 @@ def execute_test_for_file(file: str,compiler='gcc',use_valgrind=True,raise_warni
     Raises:
         e: all possible errors
     """
+
     result = compile_project(
         file,
         compiler,
         raise_errors=True,
+        flags=copilation_flags,
         raise_warnings=raise_warnings
     )
+
+
     if not use_valgrind:
-        return  ComandLineExecution(result)
+        if not execution_flags:
+            execution_flags = []
+        command =f'{result} '+ ' -'.join(execution_flags)
+        return  ComandLineExecution(command)
 
     try:
-        valgrind_test = test_binary_with_valgrind(result)
+        valgrind_test = test_binary_with_valgrind(result,execution_flags)
         remove(result)
     except Exception as e:
         remove(result)
