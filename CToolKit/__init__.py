@@ -5,8 +5,7 @@ from CToolKit.comand_line_functions import compile_project_by_command
 from CToolKit.comand_line_functions import compile_project
 from CToolKit.comand_line_functions import test_binary_with_valgrind
 from CToolKit.comand_line_functions import execute_test_for_file
-from CToolKit.comand_line_functions import execute_test_for_folder
-from CToolKit.comand_line_functions import generate_output_of_execution
+from CToolKit.FolderPresset import FolderTestPresset
 
 from CToolKit.Errors.CopilationError import CopilationError
 from CToolKit.Errors.CopilationWarning import CopilationWarning

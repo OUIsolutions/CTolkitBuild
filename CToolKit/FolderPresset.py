@@ -5,6 +5,9 @@ from typing import List
 from .comand_line_functions import execute_test_for_file
 from .Errors.NotExpectedResult import NotExpectedResult
 from .output_formatation import  sanitize_value
+from .ComandLineExecution import ComandLineExecution
+
+
 class FolderTestPresset:
 
     def __init__(
@@ -26,7 +29,6 @@ class FolderTestPresset:
 
 
 
-
     def _get_expected_file(self,folder:str):
         elements = listdir(folder)
         for e in elements:
@@ -40,8 +42,10 @@ class FolderTestPresset:
     def _get_file_to_execute(self,folder:str):
         c_file = f'{folder}/exec.c'
         cpp_file = f'{folder}/exec.cpp'
-        if isfile(cpp_file):
+
+        if isfile(c_file):
             return c_file
+
         if isfile(cpp_file):
             return cpp_file
 
@@ -56,18 +60,26 @@ class FolderTestPresset:
         if expected_file is None:
             raise FileNotFoundError(f'could not locate an expected.* in {folder}')
 
-        with open(execution_file,'r') as arq:
+        with open(expected_file,'r') as arq:
             expected_content = arq.read()
 
         sanitized_expected :dict or List[str] = sanitize_value(expected_file,expected_content)
 
-        generated_result = execute_test_for_file(
+        generated_result:dict or ComandLineExecution = execute_test_for_file(
             file=execution_file,
             compiler=self._compiler,
             use_valgrind=self._use_valgrind,
             raise_warnings=self._raise_warnings
         )
-        sanitized_result = sanitize_value(expected_file,generated_result)
+        if isinstance(generated_result,ComandLineExecution):
+            output = generated_result.output
+        else:
+            output = generated_result['output']
+
+
+        sanitized_result = sanitize_value(expected_file,output)
+
+
         if sanitized_expected != sanitized_result:
             raise NotExpectedResult(sanitized_expected,sanitized_result)
 
@@ -77,11 +89,13 @@ class FolderTestPresset:
         if not self._print_values:
             return
         if passed:
-            print('\033[92m' f'passed : {element}')
+            print('\033[92m' + f'\tpassed : {element}')
         else:
-            print('\033[91m' f'fail : {element}')
+            print('\033[91m' + f'\tfail : {element}')
 
     def _execute_loop_test(self,folder:str):
+        print(f'testing: {folder}')
+
         elements:List[str] = listdir(folder)
         for e in elements:
             path = f'{folder}/{e}'
@@ -92,9 +106,9 @@ class FolderTestPresset:
                     try:
                         self._execute_test_presset(path)
                         self._print_if_setted_to_print(e,True)
-                    except Exception as e:
+                    except Exception as ex:
                         self._print_if_setted_to_print(e,False)
-                        raise e
+                        raise ex
                 else:
                     self._execute_loop_test(path)
 
@@ -114,7 +128,7 @@ class FolderTestPresset:
                     self._print_if_setted_to_print(e, False)
                     raise ex
 
-    def execute_test(self):
+    def start_test(self):
         self._execute_loop_test(self._folder)
 
 
