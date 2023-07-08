@@ -50,6 +50,13 @@ class FolderTestPresset:
             return cpp_file
 
         raise FileNotFoundError(f'could not locate an exec.c or exec.cpp in {folder}')
+    def _print_if_setted_to_print(self,element:str , passed:bool):
+        if not self._print_values:
+            return
+        if passed:
+            print('\033[92m' + f'\tpassed : {element}')
+        else:
+            print('\033[91m' + f'\tfail : {element}')
 
     def _execute_test_presset(self,folder:str):
         pass
@@ -85,13 +92,6 @@ class FolderTestPresset:
 
 
 
-    def _print_if_setted_to_print(self,element:str , passed:bool):
-        if not self._print_values:
-            return
-        if passed:
-            print('\033[92m' + f'\tpassed : {element}')
-        else:
-            print('\033[91m' + f'\tfail : {element}')
 
     def _execute_loop_test(self,folder:str):
         print(f'testing: {folder}')
@@ -127,6 +127,51 @@ class FolderTestPresset:
                 except Exception as ex:
                     self._print_if_setted_to_print(e, False)
                     raise ex
+
+    def _execute_test_presset_creating_ouptup(self,folder:str):
+
+        execution_file = self._get_file_to_execute(folder)
+        expected_file = self._get_expected_file(folder)
+
+        if expected_file is not None:
+            return
+
+        generated_result:dict or ComandLineExecution = execute_test_for_file(
+            file=execution_file,
+            compiler=self._compiler,
+            use_valgrind=self._use_valgrind,
+            raise_warnings=self._raise_warnings
+        )
+        if isinstance(generated_result,ComandLineExecution):
+            output = generated_result.output
+        else:
+            output = generated_result['output']
+
+        with open(f'{folder}/expected.txt','w') as arq:
+            arq.write(output)
+
+
+    def _execute_loop_creating_expected(self,folder:str):
+        print(f'testing: {folder}')
+
+        elements:List[str] = listdir(folder)
+        for e in elements:
+            path = f'{folder}/{e}'
+
+            if not isdir(path):
+                continue
+
+            if e.startswith('R_') or e.startswith('WR_'):
+                try:
+                    self._execute_test_presset_creating_ouptup(path)
+                    self._print_if_setted_to_print(e,True)
+                except Exception as ex:
+                    self._print_if_setted_to_print(e,False)
+                    raise ex
+            else:
+                self._execute_loop_creating_expected(path)
+
+
 
     def start_test(self):
         self._execute_loop_test(self._folder)
