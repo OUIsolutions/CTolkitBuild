@@ -1,4 +1,4 @@
-from CToolKit.Errors.ExecutionError import ExecutionError
+from .Errors.ExecutionError import ExecutionError
 import subprocess
 
 
