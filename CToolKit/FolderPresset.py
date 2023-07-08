@@ -50,13 +50,26 @@ class FolderTestPresset:
             return cpp_file
 
         raise FileNotFoundError(f'could not locate an exec.c or exec.cpp in {folder}')
-    def _print_if_setted_to_print(self,element:str , passed:bool):
+    def _print_if_setted_to_print_test(self, element:str, passed:bool):
         if not self._print_values:
             return
         if passed:
             print('\033[92m' + f'\tpassed : {element}')
         else:
             print('\033[91m' + f'\tfail : {element}')
+
+    def _print_if_setted_to_print_creation(self, element:str, created:bool):
+        if not self._print_values:
+            return
+        if created:
+            print('\033[96m'+ f'\tcreated: {element}')
+        else:
+            print('\033[94m'+ f'\talready exist: {element}')
+
+    def _print_if_seetted_to_print_folder(self,folder:str):
+        if self._print_values:
+            print(f'folder :{folder}')
+
 
     def _execute_test_presset(self,folder:str):
         pass
@@ -94,7 +107,7 @@ class FolderTestPresset:
 
 
     def _execute_loop_test(self,folder:str):
-        print(f'testing: {folder}')
+        self._print_if_seetted_to_print_folder(folder)
 
         elements:List[str] = listdir(folder)
         for e in elements:
@@ -105,9 +118,9 @@ class FolderTestPresset:
                 if e.startswith('R_') or e.startswith('WR_'):
                     try:
                         self._execute_test_presset(path)
-                        self._print_if_setted_to_print(e,True)
+                        self._print_if_setted_to_print_test(e, True)
                     except Exception as ex:
-                        self._print_if_setted_to_print(e,False)
+                        self._print_if_setted_to_print_test(e, False)
                         raise ex
                 else:
                     self._execute_loop_test(path)
@@ -121,19 +134,20 @@ class FolderTestPresset:
                             use_valgrind=self._use_valgrind,
                             raise_warnings=self._use_valgrind
                         )
-                    self._print_if_setted_to_print(e, True)
+                    self._print_if_setted_to_print_test(e, True)
 
 
                 except Exception as ex:
-                    self._print_if_setted_to_print(e, False)
+                    self._print_if_setted_to_print_test(e, False)
                     raise ex
 
-    def _execute_test_presset_creating_ouptup(self,folder:str):
+    def _execute_test_presset_creating_output(self,folder:str):
 
         execution_file = self._get_file_to_execute(folder)
         expected_file = self._get_expected_file(folder)
 
         if expected_file is not None:
+            self._print_if_setted_to_print_creation(execution_file,False)
             return
 
         generated_result:dict or ComandLineExecution = execute_test_for_file(
@@ -148,11 +162,13 @@ class FolderTestPresset:
             output = generated_result['output']
 
         with open(f'{folder}/expected.txt','w') as arq:
+            self._print_if_setted_to_print_creation(execution_file,True)
+
             arq.write(output)
 
 
     def _execute_loop_creating_expected(self,folder:str):
-        print(f'testing: {folder}')
+        self._print_if_seetted_to_print_folder(folder)
 
         elements:List[str] = listdir(folder)
         for e in elements:
@@ -163,10 +179,9 @@ class FolderTestPresset:
 
             if e.startswith('R_') or e.startswith('WR_'):
                 try:
-                    self._execute_test_presset_creating_ouptup(path)
-                    self._print_if_setted_to_print(e,True)
+                    self._execute_test_presset_creating_output(path)
                 except Exception as ex:
-                    self._print_if_setted_to_print(e,False)
+                    self._print_if_setted_to_print_test(e, False)
                     raise ex
             else:
                 self._execute_loop_creating_expected(path)
