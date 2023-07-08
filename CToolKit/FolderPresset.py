@@ -177,4 +177,5 @@ class FolderTestPresset:
         self._execute_loop_test(self._folder)
 
 
-
+    def generate_ouptut(self):
+        self._execute_loop_creating_expected(self._folder)
