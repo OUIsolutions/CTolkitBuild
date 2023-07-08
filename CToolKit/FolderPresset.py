@@ -72,6 +72,7 @@ class FolderTestPresset:
         else:
             print('\033[91m' + f'\tfail : {element}')
 
+
     def _print_if_setted_to_print_creation(self, element:str, created:bool):
         if not self._print_values:
             return
@@ -209,7 +210,6 @@ class FolderTestPresset:
 
     def start_test(self):
         self._create_side_effect_zip()
-
         self._execute_loop_test(self._folder)
 
 
