@@ -1,7 +1,6 @@
 from typing import List
 from os import listdir
 from os.path import  isdir
-
 from .Extras import FolderTestPresetExtras
 from ..ComandLineExecution import ComandLineExecution
 from ..comand_line_functions import execute_test_for_file
@@ -15,14 +14,23 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             self._print_if_setted_to_print_creation(execution_file, False)
             return
 
-        generated_result: dict or ComandLineExecution = execute_test_for_file(
-            file=execution_file,
-            compiler=self._compiler,
-            copilation_flags=self._compilation_flags,
-            execution_flags=self._execution_flags,
-            use_valgrind=self._use_valgrind,
-            raise_warnings=self._raise_warnings
-        )
+        modification_time = self._get_side_effect_last_modification()
+
+        try:
+            generated_result: dict or ComandLineExecution = execute_test_for_file(
+                file=execution_file,
+                compiler=self._compiler,
+                copilation_flags=self._compilation_flags,
+                execution_flags=self._execution_flags,
+                use_valgrind=self._use_valgrind,
+                raise_warnings=self._raise_warnings
+            )
+        except Exception as e:
+            new_modification = self._get_side_effect_last_modification()
+            print(modification_time)
+            print(new_modification)
+
+
         if isinstance(generated_result, ComandLineExecution):
             output = generated_result.output
         else:

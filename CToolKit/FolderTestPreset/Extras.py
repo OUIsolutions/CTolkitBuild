@@ -2,6 +2,8 @@
 from .Print import FolderTestPressetPrints
 from os import listdir
 from os.path import isdir,isfile
+from os.path import getmtime
+
 import zipfile
 
 
@@ -35,6 +37,16 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
         name = f'{self._side_effect_folder}.zip'
         with zipfile.ZipFile(name, 'w') as zip:
             zip.write(self._side_effect_folder)
+
+
+    def _get_side_effect_last_modification(self)->int:
+        if self._side_effect_folder is None:
+            return
+        if not isdir(self._side_effect_folder):
+            raise FileNotFoundError(f'{self._side_effect_folder} is not present')
+
+        return getmtime(self._side_effect_folder)
+
 
 
 
