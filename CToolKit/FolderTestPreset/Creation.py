@@ -4,17 +4,14 @@ from os.path import  isdir
 from .Extras import FolderTestPresetExtras
 from ..ComandLineExecution import ComandLineExecution
 from ..comand_line_functions import execute_test_for_file
+from shutil import copytree
 class FolderTestPressetCreation(FolderTestPresetExtras):
 
     def _execute_test_presset_creating_output(self, folder: str):
         execution_file = self._get_file_to_execute(folder)
         expected_file = self._get_expected_file(folder)
 
-        if expected_file is not None:
-            self._print_if_setted_to_print_creation(execution_file, False)
-            return
 
-        modification_time = self._get_side_effect_last_modification()
 
         try:
             generated_result: dict or ComandLineExecution = execute_test_for_file(
@@ -26,10 +23,16 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
                 raise_warnings=self._raise_warnings
             )
         except Exception as e:
-            new_modification = self._get_side_effect_last_modification()
-            print(modification_time)
-            print(new_modification)
+            raise e
 
+        changed_file = self._side_effect_folder_changed()
+
+        if expected_file is not None and not changed_file:
+            self._print_if_setted_to_print_creation(execution_file, False)
+            return
+
+        if changed_file:
+            copytree(self._side_effect_folder, f'{folder}/side_effect')
 
         if isinstance(generated_result, ComandLineExecution):
             output = generated_result.output

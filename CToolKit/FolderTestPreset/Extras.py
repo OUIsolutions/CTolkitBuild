@@ -3,6 +3,8 @@ from .Print import FolderTestPressetPrints
 from os import listdir
 from os.path import isdir,isfile
 from os.path import getmtime
+from os import  remove
+import hashlib
 
 import zipfile
 
@@ -38,14 +40,45 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
         with zipfile.ZipFile(name, 'w') as zip:
             zip.write(self._side_effect_folder)
 
+        sha256 = hashlib.sha256()
+        with open(name, 'rb') as arq:
+            sha256.update(arq.read())
+        self._original_sha  =sha256.hexdigest()
 
-    def _get_side_effect_last_modification(self)->int:
+        print(f'original sha {self._original_sha}')
+
+
+    def _side_effect_folder_changed(self)->bool:
         if self._side_effect_folder is None:
-            return
+            return False
+
         if not isdir(self._side_effect_folder):
             raise FileNotFoundError(f'{self._side_effect_folder} is not present')
 
-        return getmtime(self._side_effect_folder)
+        name = f'{self._side_effect_folder}_generated.zip'
+        with zipfile.ZipFile(name, 'w') as zip:
+            zip.write(self._side_effect_folder)
+
+
+        sha256 = hashlib.sha256()
+        with open(name, 'rb') as arq:
+            sha256.update(arq.read())
+        novo_sha  =sha256.hexdigest()
+        print(f'novo sha {novo_sha}')
+
+        try:
+            remove(name)
+        except FileNotFoundError:
+            pass
+
+
+
+
+
+
+
+
+
 
 
 
