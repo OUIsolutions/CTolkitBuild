@@ -4,6 +4,8 @@ from os import listdir
 from os.path import isdir,isfile
 from os.path import getmtime
 from os import  remove
+from os.path import  dirname
+from shutil import rmtree
 import hashlib
 
 import zipfile
@@ -76,12 +78,11 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
     def _rebase_side_effect_folder(self):
         name = f'{self._side_effect_folder}.zip'
 
-        try:
-            remove(name)
-        except FileNotFoundError:
-            pass
+
+        rmtree(self._side_effect_folder,ignore_errors=True)
+
         with zipfile.ZipFile(name, 'r') as zip_ref:
-            zip_ref.extract(self._side_effect_folder)
+            zip_ref.extractall(name)
 
     def __del__(self):
         if self._side_effect_folder is None:

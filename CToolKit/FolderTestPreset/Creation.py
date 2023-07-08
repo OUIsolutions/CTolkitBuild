@@ -11,8 +11,6 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
         execution_file = self._get_file_to_execute(folder)
         expected_file = self._get_expected_file(folder)
 
-
-
         try:
             generated_result: dict or ComandLineExecution = execute_test_for_file(
                 file=execution_file,
@@ -24,7 +22,8 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             )
         except Exception as e:
             changed_file = self._side_effect_folder_changed()
-            self._rebase_side_effect_folder()
+            if changed_file:
+                self._rebase_side_effect_folder()
             raise e
 
         changed_file = self._side_effect_folder_changed()
@@ -33,9 +32,12 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             self._print_if_setted_to_print_creation(execution_file, False)
             return
 
+
         if changed_file:
-            copytree(self._side_effect_folder, f'{folder}/side_effect')
+            if not isdir(f'{folder}/side_effect'):
+                copytree(self._side_effect_folder, f'{folder}/side_effect')
             self._rebase_side_effect_folder()
+
 
         if isinstance(generated_result, ComandLineExecution):
             output = generated_result.output
