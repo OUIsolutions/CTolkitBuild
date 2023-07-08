@@ -32,6 +32,7 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             return
 
         if changed_file:
+            print('pegou aqui\n')
             copytree(self._side_effect_folder, f'{folder}/side_effect')
 
         if isinstance(generated_result, ComandLineExecution):

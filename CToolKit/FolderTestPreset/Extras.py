@@ -45,7 +45,7 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
             sha256.update(arq.read())
         self._original_sha  =sha256.hexdigest()
 
-        print(f'original sha {self._original_sha}')
+        #print(f'original sha {self._original_sha}')
 
 
     def _side_effect_folder_changed(self)->bool:
@@ -64,14 +64,23 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
         with open(name, 'rb') as arq:
             sha256.update(arq.read())
         novo_sha  =sha256.hexdigest()
-        print(f'novo sha {novo_sha}')
+
 
         try:
             remove(name)
         except FileNotFoundError:
             pass
 
+        return novo_sha != self._original_sha
 
+    def __del__(self):
+        if self._side_effect_folder is None:
+            return False
+        name = f'{self._side_effect_folder}.zip'
+        try:
+            remove(name)
+        except FileNotFoundError:
+            pass
 
 
 
