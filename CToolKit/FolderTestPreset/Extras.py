@@ -81,8 +81,8 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
 
         rmtree(self._side_effect_folder,ignore_errors=True)
 
-        with zipfile.ZipFile(name, 'r') as zip_ref:
-            zip_ref.extractall(name)
+        with zipfile.ZipFile(name, 'w') as zip_ref:
+            zip_ref.extractall(self._side_effect_folder)
 
     def __del__(self):
         if self._side_effect_folder is None:
