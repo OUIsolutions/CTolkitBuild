@@ -73,5 +73,5 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
 
     def generate_ouptut(self):
         #deleting old zips
-        self._create_side_effect_zip()
+        self._create_copy_side_effect_folder()
         #self._execute_loop_creating_expected(self._folder)

@@ -84,7 +84,7 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
 
 
     def start_test(self):
-        self._create_side_effect_zip()
+        self._create_copy_side_effect_folder()
         self._execute_loop_test(self._folder)
 
 
