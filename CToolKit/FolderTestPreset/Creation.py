@@ -5,6 +5,9 @@ from .Extras import FolderTestPresetExtras
 from ..ComandLineExecution import ComandLineExecution
 from ..comand_line_functions import execute_test_for_file
 from shutil import copytree
+
+
+
 class FolderTestPressetCreation(FolderTestPresetExtras):
 
     def _execute_test_presset_creating_output(self, folder: str):
@@ -48,6 +51,7 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             self._print_if_setted_to_print_creation(execution_file, True)
             arq.write(output)
 
+
     def _execute_loop_creating_expected(self, folder: str):
         self._print_if_seetted_to_print_folder(folder)
 
@@ -70,4 +74,4 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
     def generate_ouptut(self):
         #deleting old zips
         self._create_side_effect_zip()
-        self._execute_loop_creating_expected(self._folder)
+        #self._execute_loop_creating_expected(self._folder)

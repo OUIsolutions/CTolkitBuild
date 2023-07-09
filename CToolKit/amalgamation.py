@@ -1,7 +1,5 @@
 from os.path import join
 
-
-
 def get_action(referencer_dir: str, line: str) -> str or None:
     line = line.strip()
     if not line.startswith('#include'):
@@ -10,7 +8,6 @@ def get_action(referencer_dir: str, line: str) -> str or None:
     if '"' in line:
         relative_file = line.split('"')[1]
         return join(referencer_dir, relative_file)
-
 
 
 

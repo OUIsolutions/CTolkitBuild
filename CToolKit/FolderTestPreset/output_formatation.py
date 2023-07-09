@@ -7,8 +7,6 @@ def trim_lines(text:str)->List[str]:
 
 def sanitize_value(filename:str,content:str=None)->dict or str or List[str]:
 
-
-
     if filename.endswith('.json'):
         return json.loads(content)
 
