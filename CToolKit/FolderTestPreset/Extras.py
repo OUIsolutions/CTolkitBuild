@@ -34,14 +34,10 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
         raise FileNotFoundError(f'could not locate an exec.c or exec.cpp in {folder}')
 
 
-
     def _create_copy_side_effect_folder(self):
         if self._side_effect_folder is None:
             return
-
         copytree(self._side_effect_folder,f'{self._side_effect_folder}_copy')
-
-
 
 
     def _side_effect_folder_changed(self)->bool:

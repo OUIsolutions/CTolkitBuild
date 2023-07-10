@@ -37,8 +37,10 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
 
 
         if changed_file:
+            #verify if there is no test presseted
             if not isdir(f'{folder}/side_effect'):
                 copytree(self._side_effect_folder, f'{folder}/side_effect')
+
             self._rebase_side_effect_folder()
 
 
@@ -74,4 +76,4 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
     def generate_ouptut(self):
         #deleting old zips
         self._create_copy_side_effect_folder()
-        #self._execute_loop_creating_expected(self._folder)
+        self._execute_loop_creating_expected(self._folder)
