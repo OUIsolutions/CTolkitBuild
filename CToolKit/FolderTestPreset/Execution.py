@@ -39,19 +39,21 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
                 self._rebase_side_effect_folder()
             raise e
 
+
         #verifying it there is an side effect folder
         side_effect_test = f'{folder}/side_effect'
         if isdir(side_effect_test):
             are_equal = are_folders_equal(side_effect_test,self._side_effect_folder)
+            self._rebase_side_effect_folder()
             if are_equal == False:
-                self._rebase_side_effect_folder()
                 raise SideEffectFolderDiferent(side_effect_test)
 
         else:
             if self._side_effect_folder_changed():
+                self._rebase_side_effect_folder()
                 raise SideEffectFolderDiferent('there is no side effect folder passed')
 
-        
+
         if isinstance(generated_result,ComandLineExecution):
             output = generated_result.output
         else:
@@ -88,8 +90,20 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
                         raise ex
                 else:
                     self._execute_loop_test(path)
-
-
+            else:
+                try:
+                    execute_test_for_file(
+                        path,
+                        compiler=self._compiler,
+                        use_valgrind=self._use_valgrind,
+                        raise_warnings=self._raise_warnings,
+                        copilation_flags=self._compilation_flags,
+                        execution_flags=self._execution_flags
+                    )
+                except Exception as e:
+                    if self._side_effect_folder_changed():
+                        self._rebase_side_effect_folder()
+                        raise e
 
 
     def start_test(self):
