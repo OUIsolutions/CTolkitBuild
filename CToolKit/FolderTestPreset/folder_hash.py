@@ -6,6 +6,7 @@ from os.path import  isdir
 import hashlib
 
 
+
 def generate_folder_hash(folder:str)->str:
 
     content = listdir(folder)

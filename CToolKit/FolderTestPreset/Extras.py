@@ -2,10 +2,9 @@
 from .Print import FolderTestPressetPrints
 from os import listdir
 from os.path import isdir,isfile
-from os.path import getmtime
-from os import  remove
-from os.path import  dirname
-from shutil import rmtree,copytree
+import os
+import shutil
+from shutil import rmtree
 from .folder_hash import are_folders_equal
 
 
@@ -38,9 +37,26 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
         if self._side_effect_folder is None:
             return
         rmtree('side_effect_copy', ignore_errors=True)
-        copytree(self._side_effect_folder,'side_effect_copy')
+        self._copy_files_without_metadata(self._side_effect_folder,'side_effect_copy')
 
+    def _copy_files_without_metadata(self,source, destination):
+        try:
+            os.makedirs(destination)
+        except:pass
 
+        for e in listdir(source):
+            path = f'{source}/{e}'
+            new_path = f'{destination}/{e}'
+            if isdir(path):
+
+                os.makedirs(new_path)
+
+                self._copy_files_without_metadata(path,new_path)
+            else:
+                with open(path,'rb') as arq:
+                    content = arq.read()
+                with open(new_path,'wb') as arq2:
+                    arq2.write(content)
 
     def _side_effect_folder_changed(self)->bool:
         return not are_folders_equal(self._side_effect_folder,'side_effect_copy')
@@ -49,7 +65,7 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
 
     def _rebase_side_effect_folder(self):
         rmtree(self._side_effect_folder,ignore_errors=True)
-        copytree(f'side_effect_copy',self._side_effect_folder)
+        self._copy_files_without_metadata(f'side_effect_copy',self._side_effect_folder)
 
 
 

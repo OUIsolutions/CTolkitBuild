@@ -4,7 +4,7 @@ from os.path import  isdir
 from .Extras import FolderTestPresetExtras
 from ..ComandLineExecution import ComandLineExecution
 from ..comand_line_functions import execute_test_for_file
-from shutil import copytree
+
 
 
 
@@ -33,7 +33,7 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
         if self._side_effect_folder_changed():
             #verify if there is no test presseted
             if not isdir(f'{folder}/side_effect'):
-                copytree(self._side_effect_folder, f'{folder}/side_effect')
+                self._copy_files_without_metadata(self._side_effect_folder, f'{folder}/side_effect')
                 modified = True
             self._rebase_side_effect_folder()
 
