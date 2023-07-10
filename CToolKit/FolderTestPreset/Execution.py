@@ -91,19 +91,24 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
                 else:
                     self._execute_loop_test(path)
             else:
-                try:
-                    execute_test_for_file(
-                        path,
-                        compiler=self._compiler,
-                        use_valgrind=self._use_valgrind,
-                        raise_warnings=self._raise_warnings,
-                        copilation_flags=self._compilation_flags,
-                        execution_flags=self._execution_flags
-                    )
-                except Exception as e:
-                    if self._side_effect_folder_changed():
-                        self._rebase_side_effect_folder()
-                        raise e
+                if path.endswith('.c') or path.endswith('.cpp'):
+                    try:
+                        execute_test_for_file(
+                            path,
+                            compiler=self._compiler,
+                            use_valgrind=self._use_valgrind,
+                            raise_warnings=self._raise_warnings,
+                            copilation_flags=self._compilation_flags,
+                            execution_flags=self._execution_flags
+                        )
+                        self._print_if_setted_to_print_test(e, True)
+
+                    except Exception as ex:
+                        self._print_if_setted_to_print_test(e, False)
+
+                        if self._side_effect_folder_changed():
+                            self._rebase_side_effect_folder()
+                        raise ex
 
 
     def start_test(self):
