@@ -64,7 +64,7 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             if not isdir(path):
                 continue
 
-            if e.startswith('R_') or e.startswith('WR_'):
+            if e.startswith('T_') :
                 try:
                     self._execute_test_presset_creating_output(path)
                 except Exception as ex:
@@ -74,6 +74,5 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
                 self._execute_loop_creating_expected(path)
 
     def generate_ouptut(self):
-        #deleting old zips
         self._create_copy_side_effect_folder()
         self._execute_loop_creating_expected(self._folder)

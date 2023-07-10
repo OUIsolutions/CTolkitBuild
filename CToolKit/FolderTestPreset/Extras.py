@@ -37,22 +37,24 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
     def _create_copy_side_effect_folder(self):
         if self._side_effect_folder is None:
             return
-        copytree(self._side_effect_folder,f'{self._side_effect_folder}_copy')
+        rmtree('side_effect_copy', ignore_errors=True)
+        copytree(self._side_effect_folder,'side_effect_copy')
+
 
 
     def _side_effect_folder_changed(self)->bool:
-        return are_folders_equal(self._side_effect_folder,f'{self._side_effect_folder}_copy')
+        return not are_folders_equal(self._side_effect_folder,'side_effect_copy')
 
 
 
     def _rebase_side_effect_folder(self):
         rmtree(self._side_effect_folder,ignore_errors=True)
-        copytree(f'{self._side_effect_folder}_copy',self._side_effect_folder)
+        copytree(f'side_effect_copy',self._side_effect_folder)
 
 
 
     def __del__(self):
-       rmtree(f'{self._side_effect_folder}_copy',ignore_errors=True)
+       rmtree('side_effect_copy',ignore_errors=True)
 
 
 
