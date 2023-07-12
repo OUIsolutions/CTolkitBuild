@@ -35,6 +35,7 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
                 raise_warnings=self._raise_warnings
         )
 
+        
 
         #verifying it there is an side effect folder
         side_effect_test = f'{folder}/side_effect'
@@ -46,11 +47,10 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
                 raise SideEffectFolderDiferent(side_effect_test)
 
 
+
         else:
             if self._side_effect_folder_changed():
-                self._rebase_side_effect_folder()
                 raise SideEffectFolderDiferent('there is no side effect folder passed')
-
 
         if isinstance(generated_result,ComandLineExecution):
             output = generated_result.output
@@ -103,9 +103,6 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
 
                     except Exception as ex:
                         self._print_if_setted_to_print_test(e, False)
-
-                        if self._side_effect_folder_changed():
-                            self._rebase_side_effect_folder()
                         raise ex
 
 

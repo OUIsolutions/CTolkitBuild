@@ -15,6 +15,7 @@ def generate_folder_hash(folder:str)->str:
 
     for c in content:
         path = f'{folder}/{c}'
+        sha256.update(c.encode('utf8'))
 
         if isdir(path):
             sha256.update(generate_folder_hash(path).encode('utf8'))
@@ -22,7 +23,6 @@ def generate_folder_hash(folder:str)->str:
         else:
             with open(path,'rb') as arq:
                 sha256.update(arq.read())
-                sha256.update(c.encode('utf8'))
 
     return sha256.hexdigest()
 

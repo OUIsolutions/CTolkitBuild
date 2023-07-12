@@ -1,5 +1,7 @@
 from typing import List
 from os import listdir
+from shutil import copytree
+
 from os.path import  isdir
 from .Extras import FolderTestPresetExtras
 from ..ComandLineExecution import ComandLineExecution
@@ -32,7 +34,7 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
 
             #verify if there is no test presseted
             if not isdir(f'{folder}/side_effect'):
-                self._copy_files_without_metadata(self._side_effect_folder, f'{folder}/side_effect')
+                copytree(self._side_effect_folder, f'{folder}/side_effect')
                 modified = True
             self._rebase_side_effect_folder()
 
