@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='CToolKit',
-    version='2.0',
+    version='2.27',
     description='CToolKit to manipulate CPipeLines and Repos',
     long_description=long_description,
     long_description_content_type="text/markdown",

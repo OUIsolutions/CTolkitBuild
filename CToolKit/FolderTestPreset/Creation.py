@@ -25,12 +25,11 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
                 raise_warnings=self._raise_warnings
             )
         except Exception as e:
-            if self._side_effect_folder_changed():
-                self._rebase_side_effect_folder()
             raise e
 
         modified = False
         if self._side_effect_folder_changed():
+
             #verify if there is no test presseted
             if not isdir(f'{folder}/side_effect'):
                 self._copy_files_without_metadata(self._side_effect_folder, f'{folder}/side_effect')

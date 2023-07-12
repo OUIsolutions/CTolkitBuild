@@ -10,6 +10,7 @@ import hashlib
 def generate_folder_hash(folder:str)->str:
 
     content = listdir(folder)
+    content.sort()
     sha256 = hashlib.sha256()
 
     for c in content:
@@ -21,6 +22,7 @@ def generate_folder_hash(folder:str)->str:
         else:
             with open(path,'rb') as arq:
                 sha256.update(arq.read())
+                sha256.update(c.encode('utf8'))
 
     return sha256.hexdigest()
 
