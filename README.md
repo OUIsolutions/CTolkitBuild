@@ -108,12 +108,15 @@ ct.execute_test_for_file(FILE,COMPILER)
 Executing Test with all .c or .cpp files in the given folder 
 
 ~~~python 
-
 import CToolKit as ct
 
-COMPILER = 'gcc'
-FOLDER ='test'
-ct.execute_test_for_folder(FOLDER,COMPILER,print_values=True)
+
+test = ct.FolderTestPreset(folder='tests/main_test',side_effect_folder='tests/target')
+# wil create non existent outputs
+test.generate_ouptut()
+# will start the test
+test.start_test()
+
 
 ~~~
 
