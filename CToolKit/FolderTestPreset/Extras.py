@@ -40,29 +40,7 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
         copytree(self._side_effect_folder,'side_effect_copy')
 
 
-    '''
-    def _copy_files_without_metadata(self,source, destination):
-        try:
-            os.makedirs(destination)
-        except:pass
 
-        for e in listdir(source):
-            path = f'{source}/{e}'
-            new_path = f'{destination}/{e}'
-            if isdir(path):
-
-                os.makedirs(new_path)
-
-                copytree(path,new_path)
-
-            else:
-                with open(path,'rb') as arq:
-                    content = arq.read()
-
-                    with open(new_path,'wb') as arq2:
-                        arq2.write(content)
-    '''
-    
 
     def _side_effect_folder_changed(self)->bool:
         return not are_folders_equal(self._side_effect_folder,'side_effect_copy')
@@ -77,7 +55,6 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
 
 
     def __del__(self):
-       self._rebase_side_effect_folder()
        rmtree('side_effect_copy',ignore_errors=True)
 
 

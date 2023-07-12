@@ -13,30 +13,29 @@ from ..comand_line_functions import execute_test_for_file
 class FolderTestPressetCreation(FolderTestPresetExtras):
 
     def _execute_test_presset_creating_output(self, folder: str):
+        self._rebase_side_effect_folder()
+
         execution_file = self._get_file_to_execute(folder)
         expected_file = self._get_expected_file(folder)
 
 
-        try:
-            generated_result: dict or ComandLineExecution = execute_test_for_file(
+        generated_result: dict or ComandLineExecution = execute_test_for_file(
                 file=execution_file,
                 compiler=self._compiler,
                 copilation_flags=self._compilation_flags,
                 execution_flags=self._execution_flags,
                 use_valgrind=self._use_valgrind,
                 raise_warnings=self._raise_warnings
-            )
-        except Exception as e:
-            raise e
+        )
 
         modified = False
-        if self._side_effect_folder_changed():
 
+
+        if self._side_effect_folder_changed():
             #verify if there is no test presseted
             if not isdir(f'{folder}/side_effect'):
                 copytree(self._side_effect_folder, f'{folder}/side_effect')
                 modified = True
-            self._rebase_side_effect_folder()
 
         if expected_file is None:
             if isinstance(generated_result, ComandLineExecution):
@@ -71,9 +70,15 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
                 except Exception as ex:
                     self._print_if_setted_to_print_test(e, False)
                     raise ex
-            else:
-                self._execute_loop_creating_expected(path)
+                continue
+
+            self._execute_loop_creating_expected(path)
 
     def generate_ouptut(self):
         self._create_copy_side_effect_folder()
-        self._execute_loop_creating_expected(self._folder)
+        try:
+            self._execute_loop_creating_expected(self._folder)
+        except Exception as e:
+            self._rebase_side_effect_folder()
+            raise e
+        self._rebase_side_effect_folder()
