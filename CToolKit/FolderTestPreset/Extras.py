@@ -54,8 +54,6 @@ class FolderTestPresetExtras(FolderTestPressetPrints):
 
 
 
-    def __del__(self):
-       rmtree('side_effect_copy',ignore_errors=True)
 
 
 

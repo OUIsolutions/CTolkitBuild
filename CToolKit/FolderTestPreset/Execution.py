@@ -1,6 +1,7 @@
 
 from os import listdir
 from os.path import  isdir
+from shutil import rmtree
 from typing import List
 from ..comand_line_functions import execute_test_for_file
 from ..Errors.NotExpectedResult import NotExpectedResult
@@ -115,7 +116,9 @@ class FolderTestPressetExecution(FolderTestPressetCreation):
             self._execute_loop_test(self._folder)
         except Exception as e:
             self._rebase_side_effect_folder()
+            rmtree('side_effect_copy', ignore_errors=True)
             raise e
 
         self._rebase_side_effect_folder()
+        rmtree('side_effect_copy',ignore_errors=True)
 

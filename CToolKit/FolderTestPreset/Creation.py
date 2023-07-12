@@ -1,6 +1,6 @@
 from typing import List
 from os import listdir
-from shutil import copytree
+from shutil import copytree,rmtree
 
 from os.path import  isdir
 from .Extras import FolderTestPresetExtras
@@ -80,5 +80,9 @@ class FolderTestPressetCreation(FolderTestPresetExtras):
             self._execute_loop_creating_expected(self._folder)
         except Exception as e:
             self._rebase_side_effect_folder()
+            rmtree('side_effect_copy', ignore_errors=True)
             raise e
+
         self._rebase_side_effect_folder()
+        rmtree('side_effect_copy', ignore_errors=True)
+
